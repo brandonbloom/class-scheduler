@@ -1,0 +1,88 @@
+#scratch {
+    width: 225px;
+}
+
+#courseList {
+    margin-left: 15px;
+}
+
+#courseList .course {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    padding: 10px;
+}
+
+.course .controls {
+    float: right;
+}
+
+.controls div {
+    width: 16px;
+    height: 16px;
+    border: 1px solid gray;
+    text-align: center;
+}
+
+.course > .name {
+    font-weight: bold;
+}
+
+.checkbox {
+    margin-left: -18px;
+}
+
+.sectionType {
+    margin-left: 15px;
+    padding: 5px;
+}
+
+.sections {
+    margin-left: 15px;
+    padding: 5px;
+}
+
+div.section {
+}
+
+#scheduler tr {
+    vertical-align: top;
+}
+
+#calendar table {
+    margin-left: 25px;
+    border-collapse: collapse;
+}
+
+#calendar th.day {
+    width: 150px;
+}
+
+#calendar td {
+    border: 1px solid black;
+    height: 600px;
+    position: relative;
+}
+
+.times {
+    width: 35px;
+    min-width: 35px;
+}
+
+.time {
+    position: absolute;
+    font-size: 10pt;
+}
+
+.occurance {
+    position: absolute;
+    background-color: #DFDFDF;
+    border: 1px solid #AAA;
+}
+
+.active {
+    border: 1px solid red;
+}
+
+.targeted {
+    background-color: red;
+}

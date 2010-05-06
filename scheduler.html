@@ -1,0 +1,78 @@
+<html>
+<head>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="scheduler.js"></script>
+</head>
+</body>
+
+    <div id="templates" style="display: none">
+
+        <div class="course">
+            <input type="checkbox" class="checkbox"/>
+            <div class="controls">
+                <div class="remove">X</div>
+            </div>
+            <span class="subject"></span>
+            <span class="number"></span>
+            <div class="name"></div>
+        </div>
+
+        <div class="sections">
+        </div>
+
+        <div class="sectionType">
+            <div class="name"></div>
+        </div>
+
+        <div class="section">
+            <input type="radio"/>
+            <label/>
+        </div>
+
+        <div class="occurance">
+            <span class="subject"></span>
+            <span class="course"></span>
+            <span class="section"></span>
+        </div>
+
+    </div>
+
+
+    <table id="scheduler">
+        <tr>
+
+            <td id="scratch">
+                <div id="courseList">
+                </div>
+                <div>
+                    <br/>
+                    <a href="#">Find more courses</a>
+                </div>
+            </td>
+
+            <td id="calendar">
+                <table>
+                    <tr>
+                        <th class="times">&nbsp;</th>
+                        <th class="day monday">Monday</th>
+                        <th class="day tuesday">Tuesday</th>
+                        <th class="day wednesday">Wednesday</th>
+                        <th class="day thursday">Thursday</th>
+                        <th class="day friday">Friday</th>
+                    </tr>
+                    <tr>
+                        <td class="times"></td>
+                        <td class="day monday"></td>
+                        <td class="day tuesday"></td>
+                        <td class="day wednesday"></td>
+                        <td class="day thursday"></td>
+                        <td class="day friday"></td>
+                    </tr>
+                </table>
+            </td>
+
+        </tr>
+    </table>
+
+</body>
