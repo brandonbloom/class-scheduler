@@ -186,6 +186,20 @@ $(function() {
         }
     }
 
+    var addSectionEvents = function(section, occurances) {
+        section.mouseenter(function() {
+            $(this).addClass('targeted');
+            for (var occuranceIndex in occurances) {
+                occurances[occuranceIndex].addClass('targeted');
+            }
+        }).mouseleave(function() {
+            $(this).removeClass('targeted');
+            for (var occuranceIndex in occurances) {
+                occurances[occuranceIndex].removeClass('targeted');
+            }
+        })
+    };
+
     var addCourse = function(course) {
         // Course
         var newCourse = courseTemplate.clone();
@@ -196,6 +210,7 @@ $(function() {
         var sectionTypeCount = attrCount(course.sections);
         var allOccurances = [];
         var sectionTypeIndex = 0;
+        var occurances;
         for (var sectionType in course.sections) {
             // Section List
             var sections = course.sections[sectionType];
@@ -214,7 +229,7 @@ $(function() {
                     .text(section.number)
                     .attr('for', sectionId);
                 newSectionList.append(newSection)
-                var occurances = [];
+                occurances = [];
                 for (var dayIndex in section.days) {
                     // Occurance
                     var day = section.days[dayIndex];
@@ -232,31 +247,24 @@ $(function() {
                     occurances.push(newOccurance);
                     allOccurances.push(newOccurance);
                 }
-                $.data(newSection, 'occurances', occurances);
                 // Section events
-                (function (occurances) {
-                    newSection.mouseenter(function() {
-                        $(this).addClass('targeted');
-                        for (var occuranceIndex in occurances) {
-                            occurances[occuranceIndex].addClass('targeted');
-                        }
-                    }).mouseleave(function() {
-                        $(this).removeClass('targeted');
-                        for (var occuranceIndex in occurances) {
-                            occurances[occuranceIndex].removeClass('targeted');
-                        }
-                    }) })
-                (occurances);
+                addSectionEvents(newSection, occurances);
             }
             if (sectionTypeCount > 1) {
                 // Section Type
                 var newSectionType = sectionTypeTemplate.clone();
                 newSectionType.children('.name').text(sectionType);
-                if (sections.length > 1)
+                if (sections.length > 1) {
                     newSectionType.append(newSectionList);
+                } else {
+                    addSectionEvents(newSectionType, occurances);
+                }
                 newCourse.append(newSectionType);
+
             } else if (sections.length > 1) {
                 newCourse.append(newSectionList);
+            } else {
+                addSectionEvents(newCourse, occurances);
             }
             sectionTypeIndex++;
         }
