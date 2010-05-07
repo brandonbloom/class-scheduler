@@ -186,14 +186,14 @@ $(function() {
         }
     }
 
-    var addSectionEvents = function(section, occurances) {
-        section.mouseenter(function() {
-            $(this).addClass('targeted');
+    var addSectionEvents = function(source, section, occurances) {
+        source.mouseenter(function() {
+            section.addClass('targeted');
             for (var occuranceIndex in occurances) {
                 occurances[occuranceIndex].addClass('targeted');
             }
         }).mouseleave(function() {
-            $(this).removeClass('targeted');
+            section.removeClass('targeted');
             for (var occuranceIndex in occurances) {
                 occurances[occuranceIndex].removeClass('targeted');
             }
@@ -248,7 +248,10 @@ $(function() {
                     allOccurances.push(newOccurance);
                 }
                 // Section events
-                addSectionEvents(newSection, occurances);
+                addSectionEvents(newSection, newSection, occurances);
+                for (var i in occurances) {
+                    addSectionEvents(occurances[i], newSection, occurances);
+                }
             }
             if (sectionTypeCount > 1) {
                 // Section Type
