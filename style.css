@@ -79,10 +79,28 @@ div.section {
     border: 1px solid #AAA;
 }
 
-.active {
-    border: 1px solid red;
-}
+.color0 { background-color: #bfeaff; }
+.color0.active, .color0 .active { background-color: #80d4ff; }
+.color0.targeted, .color0 .targeted { background-color: #40bfff; }
+.color1 { background-color: #ffefbf; }
+.color1.active, .color1 .active { background-color: #ffdf80; }
+.color1.targeted, .color1 .targeted { background-color: #ffcf40; }
+.color2 { background-color: #ffbfbf; }
+.color2.active, .color2 .active { background-color: #ff8080; }
+.color2.targeted, .color2 .targeted { background-color: #ff4040; }
+.color3 { background-color: #e4ffbf; }
+.color3.active, .color3 .active { background-color: #caff80; }
+.color3.targeted, .color3 .targeted { background-color: #afff40; }
+.color4 { background-color: #cabfff; }
+.color4.active, .color4 .active { background-color: #9580ff; }
+.color4.targeted, .color4 .targeted { background-color: #6040ff; }
+.color5 { background-color: #ffbfff; }
+.color5.active, .color5 .active { background-color: #ff80ff; }
+.color5.targeted, .color5 .targeted { background-color: #ff40ff; }
+.color6 { background-color: #bfffdf; }
+.color6.active, .color6 .active { background-color: #80ffbf; }
+.color6.targeted, .color6 .targeted { background-color: #40ff9f; }
+.color7 { background-color: #ffd5bf; }
+.color7.active, .color7 .active { background-color: #ffaa80; }
+.color7.targeted, .color7 .targeted { background-color: #ff8040; }
 
-.targeted {
-    background-color: red;
-}

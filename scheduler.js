@@ -300,4 +300,13 @@ $(function() {
         key: 'section',
         cls: 'targeted'
     });
+
+    $('*', scheduler).each(function() {
+        var course = $(this).data('course');
+        if (course) {
+            //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
+            courseColor = 'color' + (course.id - 1)
+            $(this).addClass(courseColor);
+        }
+    });
 });
