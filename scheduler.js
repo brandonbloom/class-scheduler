@@ -175,13 +175,12 @@ $(function() {
     var timeHeight = function(time) {
         return time * 55;
     };
-    var baseTop = timeHeight(8);
     var setTimeTop = function(element, time) {
         element.css('margin-top',
-                    timeHeight(time) - baseTop + 'px');
+                    timeHeight(time) + 'px');
     }
 
-    for (var hour = 8; hour < 19; hour++) {
+    for (var hour = 0; hour < 24; hour++) {
         // Hour markers
         var time = $('<div class="time">' +
                      hour + ':00' +
@@ -374,4 +373,6 @@ $(function() {
             selectSection(section, selected);
         });
     });
+
+    $('.scroller', calendar).scrollTop(timeHeight(7.75));
 });

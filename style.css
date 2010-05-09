@@ -53,13 +53,22 @@ div.section {
     border-collapse: collapse;
 }
 
-#calendar th.day {
+#calendar .day {
     width: 150px;
+}
+
+#calendar .scrollbar {
+    width: 14px;
 }
 
 #calendar td {
     border: 1px solid black;
-    height: 600px;
+}
+
+.scroller {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 500px; /* TODO: Control with Javascript */
 }
 
 .times {
@@ -72,6 +81,12 @@ div.section {
     font-size: 10pt;
     border-top: 1px solid #CCC;
     width: 100%
+}
+
+.forceHeight {
+    visibility: hidden;
+    width: 0px;
+    height: 1320px; /* See the timeHeight function */
 }
 
 td .container {
