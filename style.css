@@ -74,6 +74,7 @@ div.section {
 .times {
     width: 35px;
     min-width: 35px;
+    text-align: right;
 }
 
 .time {

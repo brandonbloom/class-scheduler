@@ -183,7 +183,8 @@ $(function() {
     for (var hour = 0; hour < 24; hour++) {
         // Hour markers
         var time = $('<div class="time">' +
-                     hour + ':00' +
+                     (hour == 0 || hour == 12 ? 12 : hour % 12) +
+                     (hour < 12 ? 'am' : 'pm') +
                      '</div>');
         setTimeTop(time, hour);
         $('td.times .container').append(time);
