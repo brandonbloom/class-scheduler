@@ -3,7 +3,8 @@
 }
 
 #courseList {
-    margin-left: 15px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 #courseList .course {
@@ -44,12 +45,21 @@
 div.section {
 }
 
+td {
+    padding: 0px;
+}
+
 #scheduler tr {
     vertical-align: top;
 }
 
+#calendar {
+    background-color: #DDF1FF;
+    padding: 8px;
+    border: 1px solid #CBCBCB;
+}
+
 #calendar table {
-    margin-left: 25px;
     border-collapse: collapse;
 }
 
@@ -57,24 +67,37 @@ div.section {
     width: 150px;
 }
 
+th.day {
+    padding-bottom: 8px;
+}
+
+td.day {
+    background-color: #fffbf2;
+}
+
 #calendar .scrollbar {
     width: 14px;
 }
 
 #calendar td {
-    border: 1px solid black;
+    border-right: 1px solid #CBCBCB;
 }
 
 .scroller {
     overflow-x: hidden;
     overflow-y: scroll;
     height: 500px; /* TODO: Control with Javascript */
+    border: 1px solid #CBCBCB;
 }
 
 .times {
-    width: 35px;
-    min-width: 35px;
+    width: 40px;
+    min-width: 40px;
     text-align: right;
+}
+
+.days .times {
+    background-color: #EFEFEF;
 }
 
 .time {
@@ -108,6 +131,14 @@ td .container {
     height: 0px;
     width: 100%;
     border-top: 1px dashed #CCC;
+}
+
+.businessHours {
+    position: absolute;
+    width: 100%;
+    top: 495px;
+    height: 440px;
+    background-color: white;
 }
 
 .occurance {

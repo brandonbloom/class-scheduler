@@ -185,7 +185,7 @@ $(function() {
         var time = $('<div class="time">' +
                      (hour == 0 || hour == 12 ? 12 : hour % 12) +
                      (hour < 12 ? 'am' : 'pm') +
-                     '</div>');
+                     '&nbsp;</div>');
         setTimeTop(time, hour);
         $('td.times .container').append(time);
         // Horizontal rules
