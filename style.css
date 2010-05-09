@@ -60,7 +60,6 @@ div.section {
 #calendar td {
     border: 1px solid black;
     height: 600px;
-    position: relative;
 }
 
 .times {
@@ -71,6 +70,28 @@ div.section {
 .time {
     position: absolute;
     font-size: 10pt;
+    border-top: 1px solid #CCC;
+    width: 100%
+}
+
+td .container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.hour {
+    position: absolute;
+    height: 0px;
+    width: 100%;
+    border-top: 1px solid #CCC;
+}
+
+.halfHour {
+    position: absolute;
+    height: 0px;
+    width: 100%;
+    border-top: 1px dashed #CCC;
 }
 
 .occurance {

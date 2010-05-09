@@ -157,6 +157,9 @@ function attrCount(obj) {
     return i;
 }
 
+//TODO: Support weekends
+var DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
 $(function() {
     var templates = $('#templates');
     var courseTemplate = $(templates).children('.course');
@@ -178,14 +181,24 @@ $(function() {
                     timeHeight(time) - baseTop + 'px');
     }
 
-    // Time markers
     for (var hour = 8; hour < 19; hour++) {
-        for (var partialHour = 0.0; partialHour < 1.0; partialHour += 0.5) {
-            var time = $('<div class="time">' +
-                         hour + ':' + partialHour * 60 +
-                         '</div>');
-            setTimeTop(time, hour + partialHour);
-            $('td.times').append(time);
+        // Hour markers
+        var time = $('<div class="time">' +
+                     hour + ':00' +
+                     '</div>');
+        setTimeTop(time, hour);
+        $('td.times .container').append(time);
+        // Horizontal rules
+        for (var dayIndex in DAYS) {
+            var day = DAYS[dayIndex];
+            var dayCell = $('td.day.' + day);
+            var container = $('.' + day + ' .container');
+            var hourRule = $('<div class="hour"/>');
+            setTimeTop(hourRule, hour);
+            container.append(hourRule);
+            var halfHourRule = $('<div class="halfHour"/>');
+            setTimeTop(halfHourRule, hour + 0.5);
+            container.append(halfHourRule);
         }
     }
 
@@ -256,7 +269,7 @@ $(function() {
                     //TODO: NEXT LINE IS A TEMPORARY HACK FOR CONFLICTS
                     newOccurance.css('margin-left',
                                      (course.id - 1) * 25 + 'px');
-                    $('td.day.' + day).append(newOccurance);
+                    $('td.day.' + day + ' .container').append(newOccurance);
                     occurances.push(newOccurance);
                     allOccurances.push(newOccurance);
                 }
