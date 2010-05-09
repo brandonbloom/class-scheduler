@@ -293,7 +293,9 @@ $(function() {
         // Course Events
         $('.remove', newCourse).click(function() {
             courses.splice(courses.indexOf(course), 1);
-            $(this).closest('.course').remove();
+            $(this).closest('.course').slideUp(300, function() {
+                $(this).remove();
+            });
             for (var occuranceIndex in allOccurances) {
                 allOccurances[occuranceIndex].remove();
             }
