@@ -167,6 +167,7 @@ $(function() {
 
     var scheduler = $('#scheduler');
     var courseList = $('#courseList', scheduler);
+    var calendar = $('#calendar');
 
     var timeHeight = function(time) {
         return time * 55;
@@ -194,7 +195,8 @@ $(function() {
             var value = $(this).data(settings.key);
             if (value) {
                 $(this).mouseenter(function() {
-                    elements.each(function() {
+                    elements.show()
+                    .each(function() {
                         if ($(this).data(settings.key) == value) {
                             $(this).addClass(settings.cls);
                         }
@@ -234,8 +236,8 @@ $(function() {
                 newSection.children('input')
                     .attr('name', sectionTypeName)
                     .attr('id', sectionId);
-                newSection.children('label')
-                    .text(section.number)
+                newSection.children('label') // TODO: section.id is for debug
+                    .text(section.number + ' (' + section.id + ')')
                     .attr('for', sectionId);
                 newSectionList.append(newSection)
                 occurances = [];
@@ -279,7 +281,7 @@ $(function() {
         // Course Events
         $('.remove', newCourse).click(function() {
             courses.splice(courses.indexOf(course), 1);
-            $(this).parents('.course').remove();
+            $(this).closest('.course').remove();
             for (var occuranceIndex in allOccurances) {
                 allOccurances[occuranceIndex].remove();
             }
@@ -308,5 +310,55 @@ $(function() {
             courseColor = 'color' + (course.id - 1)
             $(this).addClass(courseColor);
         }
+    });
+
+    var selectSection = function(section, selected) {
+        $('.occurance', calendar).each(function () {
+            if (section == $(this).data('section')) {
+                if (selected) {
+                    $(this).addClass('selected');
+                } else {
+                    $(this).removeClass('selected');
+                }
+            }
+        });
+    };
+
+    $('.course .checkbox', courseList).change(function() {
+        var course = $(this).parent().data('course');
+        if ($(this).attr('checked')) {
+            var courseElement = $(this).parent();
+            $('.radio', courseElement).change();
+            $('.sectionType', courseElement).andSelf().each(function() {
+                var section = $(this).data('section');
+                if (section) {
+                    selectSection(section, true);
+                }
+            });
+        } else {
+            $('.occurance', calendar).each(function() {
+                if (course == $(this).data('course')) {
+                    $(this).removeClass('selected');
+                }
+            });
+        }
+    });
+
+    $('.course .radio', courseList).change(function() {
+        $('div.section', $(this).closest('.sections')).each(function() {
+            var section = $(this).data('section');
+            var selected = $('.radio', this).attr('checked');
+            if (selected) {
+                $(this).closest('.course').children('.checkbox').each(
+                    function() {
+                        var courseSelected = $(this).attr('checked');
+                        if (!courseSelected) {
+                            $(this).attr('checked', true)
+                                   .triggerHandler('change');
+                        }
+                   });
+            }
+            selectSection(section, selected);
+        });
     });
 });
