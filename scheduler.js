@@ -1,7 +1,10 @@
 var courses = [
     {
         'id' : 1,
-        'subject' : 'BIO',
+        'subject' : {
+            abbreviation : 'BIO',
+            name : 'Biology'
+        },
         'number' : '101',
         'name' : 'Introduction to Biology',
         'sections' : {
@@ -61,7 +64,10 @@ var courses = [
     },
     {
         'id' : 2,
-        'subject' : 'MATH',
+        'subject' : {
+            abbreviation : 'MATH',
+            name : 'Mathematics'
+        },
         'number' : '101',
         'name' : 'Introduction to Calculus',
         'sections' : {
@@ -105,7 +111,10 @@ var courses = [
     },
     {
         'id' : 3,
-        'subject' : 'CS',
+        'subject' : {
+            abbreviation : 'CS',
+            name : 'Computer Science'
+        },
         'number' : '151',
         'name' : 'Comptuer Programming I',
         'sections' : {
@@ -131,7 +140,10 @@ var courses = [
     },
     {
         'id' : 4,
-        'subject' : 'CS',
+        'subject' : {
+            abbreviation : 'CS',
+            name : 'Computer Science'
+        },
         'number' : '152',
         'name' : 'Comptuer Programming 2',
         'sections' : {
@@ -208,7 +220,7 @@ $(function() {
             var value = $(this).data(settings.key);
             if (value) {
                 $(this).mouseenter(function() {
-                    elements.show()
+                    elements
                     .each(function() {
                         if ($(this).data(settings.key) == value) {
                             $(this).addClass(settings.cls);
@@ -227,7 +239,7 @@ $(function() {
         var newCourse = courseTemplate.clone();
         newCourse.data('course', course);
         var sectionTypeCount = attrCount(course.sections);
-        newCourse.children('.subject').text(course.subject);
+        newCourse.children('.subject').text(course.subject.name);
         newCourse.children('.name').text(course.name);
         newCourse.children('.number').text(course.number);
         var sectionTypeCount = attrCount(course.sections);
@@ -249,8 +261,8 @@ $(function() {
                 newSection.children('input')
                     .attr('name', sectionTypeName)
                     .attr('id', sectionId);
-                newSection.children('label') // TODO: section.id is for debug
-                    .text(section.number + ' (' + section.id + ')')
+                newSection.children('label')
+                    .text(section.number)
                     .attr('for', sectionId);
                 newSectionList.append(newSection)
                 occurances = [];
@@ -260,7 +272,8 @@ $(function() {
                     var newOccurance = occuranceTemplate.clone();
                     newOccurance.data('course', course);
                     newOccurance.data('section', section);
-                    newOccurance.children('.subject').text(course.subject);
+                    newOccurance.children('.subject')
+                        .text(course.subject.abbreviation);
                     newOccurance.children('.course').text(course.number);
                     newOccurance.children('.section').text(section.number);
                     setTimeTop(newOccurance, section.start);
