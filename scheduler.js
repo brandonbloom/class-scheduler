@@ -200,7 +200,7 @@ $(function() {
     for (var hour = 0; hour < 24; hour++) {
         // Hour markers
         var time = $('<div class="time">' +
-                     (hour == 0 || hour == 12 ? 12 : hour % 12) +
+                     (hour === 0 || hour === 12 ? 12 : hour % 12) +
                      (hour < 12 ? 'am' : 'pm') +
                      '&nbsp;</div>');
         setTimeTop(time, hour);
@@ -219,22 +219,29 @@ $(function() {
         }
     }
 
-    $.fn.bindHighlighting = function(settings) {
-        var elements = $(settings.selector, this);
-        elements.each(function() {
-            var value = $(this).data(settings.key);
-            if (value) {
-                $(this).mouseenter(function() {
-                    elements
-                    .each(function() {
-                        if ($(this).data(settings.key) == value) {
-                            $(this).addClass(settings.cls);
-                        }
-                    });
-                }).mouseleave(function() {
-                    elements.removeClass(settings.cls);
-                });
+    jQuery.fn.eachData = function(key, callback) {
+        return this.each(function(index, element) {
+            var value = $(this).data(key);
+            if (value !== undefined && value !== null) {
+                if (callback.call(this, value, index, element) === false) {
+                    return false;
+                }
             }
+        });
+    };
+
+    jQuery.fn.bindHighlighting = function(settings) {
+        var elements = $(settings.selector, this);
+        elements.eachData(settings.key, function(value) {
+            $(this).mouseenter(function() {
+                elements.each(function() {
+                    if ($(this).data(settings.key) === value) {
+                        $(this).addClass(settings.cls);
+                    }
+                });
+            }).mouseleave(function() {
+                elements.removeClass(settings.cls);
+            });
         });
         return this;
     };
@@ -332,18 +339,15 @@ $(function() {
         cls: 'targeted'
     });
 
-    $('.course, .occurance', scheduler).each(function() {
-        var course = $(this).data('course');
-        if (course) {
-            //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
-            courseColor = 'color' + (course.id - 1)
-            $(this).addClass(courseColor);
-        }
+    $('.course, .occurance', scheduler).eachData('course', function(course) {
+        //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
+        var courseColor = 'color' + (course.id - 1)
+        $(this).addClass(courseColor);
     });
 
     var selectSection = function(section, selected) {
         $('.occurance', calendar).each(function () {
-            if (section == $(this).data('section')) {
+            if (section === $(this).data('section')) {
                 if (selected) {
                     $(this).addClass('selected');
                 } else {
@@ -366,7 +370,7 @@ $(function() {
             });
         } else {
             $('.occurance', calendar).each(function() {
-                if (course == $(this).data('course')) {
+                if (course === $(this).data('course')) {
                     $(this).removeClass('selected');
                 }
             });
@@ -429,5 +433,8 @@ $(function() {
 
     $('#voodoo').click(function() {
         $('.conflict', calendar).remove();
+        for (var dayIndex in DAYS) {
+            var day = DAYS[dayIndex];
+        }
     });
 });
