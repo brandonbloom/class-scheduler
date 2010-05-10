@@ -179,6 +179,7 @@ $(function() {
     var sectionListTemplate = $('.sections', templates);
     var sectionTemplate = $('.section', templates);
     var occuranceTemplate = $('.occurance', templates);
+    var conflictTemplate = $('.conflict', templates);
 
     var scheduler = $('#scheduler');
     var courseList = $('#courseList', scheduler);
@@ -331,7 +332,7 @@ $(function() {
         cls: 'targeted'
     });
 
-    $('*', scheduler).each(function() {
+    $('.course, .occurance', scheduler).each(function() {
         var course = $(this).data('course');
         if (course) {
             //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
@@ -391,4 +392,39 @@ $(function() {
     });
 
     $('.scroller', calendar).scrollTop(timeHeight(7.75));
+
+    var mod = function(x, y) {
+        // Supports negative numbers
+        return ((x % y) + y) % y;
+    };
+
+    var createConflict = function(day, start, duration, content) {
+        var newConflict = conflictTemplate.clone();
+        newConflict.css('margin-top', timeHeight(start) + 'px')
+                   .css('height', timeHeight(duration));
+        $('td.day.' + day + ' .container').append(newConflict);
+        var STRIPE_RADIUS = 16;
+        var STRIPE_HEIGHT = 128;
+        var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
+        var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
+        var colors = [0,1];
+        var rows = Math.ceil(newConflict.height() / 112);
+        var cols = Math.ceil(newConflict.width() / 16);
+        for (var y = 0; y < rows; ++y) {
+            var i = y * (MIN_X - 1);
+            for (var x = MIN_X; x < cols; ++x) {
+                newConflict.append($('<div/>', {
+                    class: 'diagonal c' + mod(i, colors.length),
+                    css: {
+                        left: x * STRIPE_RADIUS - STRIPE_RADIUS / 4 + 'px',
+                        top: y * STRIPE_INNER_HEIGHT - STRIPE_RADIUS / 2 + 'px'
+                    }
+                }));
+                ++i;
+            }
+        }
+        $('.content', newConflict).text(content);
+    };
+
+    createConflict('monday', 9, 2, "CONFLICT YO");
 });

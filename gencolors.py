@@ -13,16 +13,16 @@ for color_index, row in enumerate(colors):
             rule += ', .color%s %s' % (color_index, selector)
         rule += ' { background-color: #%s; }' % color
         print rule
-    print ('.color%s.diagonal' % color_index +
+    print ('.diagonal.c%s' % color_index +
         ' { background-image: url("images/diagonal%s.gif"); }' % color_index)
 
+    color = row[1]
     img = Image.new('P', (128,128), 0)
     img.putpalette((
         0,0,0,
         hex2dec(color[:2]),hex2dec(color[2:4]),hex2dec(color[4:])
     ))
     draw = ImageDraw.Draw(img)
-    color = '#' + row[1]
     for x in range(-8, 8):
         draw.line((-16+x,-16,148+x,148), fill=1)
     img.convert('P', colors=2)
