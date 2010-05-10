@@ -146,9 +146,11 @@ td .container {
     position: absolute;
     visibility: hidden;
     width: 100%;
+    display: none;
 }
 
 .occurance.active, .occurance.selected {
+    display: block;
     visibility: visible;
 }
 

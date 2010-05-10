@@ -134,6 +134,14 @@ var courses = [
                     'days' : ['monday', 'wednesday', 'friday'],
                     'start' : 15,
                     'end' : 16
+                },
+                {
+                    'id' : 13,
+                    'number' : 'C',
+                    'instructor' : 'Pablo L. Enoch',
+                    'days' : ['tuesday', 'thursday'],
+                    'start' : 13,
+                    'end' : 14.5
                 }
             ]
         }
@@ -149,7 +157,7 @@ var courses = [
         'sections' : {
             'Lecture' : [
                 {
-                    'id' : 13,
+                    'id' : 14,
                     'number' : 'A',
                     'instructor' : 'Pablo L. Enoch',
                     'days' : ['thursday'],
@@ -161,12 +169,34 @@ var courses = [
     }
 ];
 
-function attrCount(obj) {
-    var i = 0;
-    for (var attr in obj) {
-        i += 1;
+Object.size = function(obj) {
+    var size = 0;
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            size++;
+        }
     }
-    return i;
+    return size;
+};
+
+function keys(obj) {
+    var keys = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            keys.push(key);
+        }
+    }
+    return keys;
+}
+
+function values(obj) {
+    var values = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            values.push(obj[key]);
+        }
+    }
+    return values;
 }
 
 //TODO: Support weekends
@@ -192,7 +222,8 @@ $(function() {
         element.css('margin-top',
                     timeHeight(time) + 'px');
     }
-    var sizeEvent = function(element, start, duration) {
+    var sizeEvent = function(element, start, end) {
+        var duration = end - start;
         element.css('margin-top', timeHeight(start) + 1 + 'px')
                .css('height', timeHeight(duration) - 1 + 'px');
     }
@@ -252,11 +283,11 @@ $(function() {
         // Course
         var newCourse = courseTemplate.clone();
         newCourse.data('course', course);
-        var sectionTypeCount = attrCount(course.sections);
+        var sectionTypeCount = Object.size(course.sections);
         newCourse.children('.subject').text(course.subject.name);
         newCourse.children('.name').text(course.name);
         newCourse.children('.number').text(course.number);
-        var sectionTypeCount = attrCount(course.sections);
+        var sectionTypeCount = Object.size(course.sections);
         var allOccurances = [];
         var sectionTypeIndex = 0;
         var occurances;
@@ -267,6 +298,7 @@ $(function() {
             for (var sectionIndex in sections) {
                 // Section
                 var section = sections[sectionIndex];
+                section.courseId = course.id;
                 var newSection = sectionTemplate.clone();
                 newSection.data('section', section);
                 var sectionTypeName = 'section_type_' + course.id +
@@ -276,7 +308,7 @@ $(function() {
                     .attr('name', sectionTypeName)
                     .attr('id', sectionId);
                 newSection.children('label')
-                    .text(section.number)
+                    .text(section.number + ' ~ ' + section.id)
                     .attr('for', sectionId);
                 newSectionList.append(newSection)
                 occurances = [];
@@ -290,8 +322,7 @@ $(function() {
                         .text(course.subject.abbreviation);
                     newOccurance.children('.course').text(course.number);
                     newOccurance.children('.section').text(section.number);
-                    var duration = Math.max(0.5, section.end - section.start);
-                    sizeEvent(newOccurance, section.start, duration);
+                    sizeEvent(newOccurance, section.start, section.end);
                     $('td.day.' + day + ' .container').append(newOccurance);
                     occurances.push(newOccurance);
                     allOccurances.push(newOccurance);
@@ -397,9 +428,9 @@ $(function() {
         return ((x % y) + y) % y;
     };
 
-    var createConflict = function(day, start, duration, colors, content) {
+    var createConflict = function(day, start, end, colors, content) {
         var newConflict = conflictTemplate.clone();
-        sizeEvent(newConflict, start, duration);
+        sizeEvent(newConflict, start, end);
         $('td.day.' + day + ' .container').append(newConflict);
         var STRIPE_RADIUS = 16;
         var STRIPE_HEIGHT = 128;
@@ -411,7 +442,7 @@ $(function() {
             var i = y * (MIN_X - 1);
             for (var x = MIN_X; x < cols; ++x) {
                 newConflict.append($('<div/>', {
-                    class: 'diagonal c' + mod(i, colors.length),
+                    class: 'diagonal c' + colors[mod(i, colors.length)],
                     css: {
                         left: x * STRIPE_RADIUS - STRIPE_RADIUS / 4 + 'px',
                         top: y * STRIPE_INNER_HEIGHT - STRIPE_RADIUS / 2 + 'px'
@@ -423,13 +454,55 @@ $(function() {
         $('.content', newConflict).text(content);
     };
 
-    createConflict('tuesday', 12, 2, [0,1], "Test Conflict");
-    createConflict('thursday', 14, 1, [1,2,3], "Another conflict");
-
     $('#voodoo').click(function() {
         $('.conflict', calendar).remove();
         for (var dayIndex in DAYS) {
             var day = DAYS[dayIndex];
+            console.log('--' + day + '--');
+            // Maps halfHourIndex to sections with that start or end time.
+            //TODO: Is it OK to only support half-hour accuracy?
+            var edgesByHalfHour = [];
+            for (var hour = 0; hour <= 48; ++hour) {
+                edgesByHalfHour.push({started:[], ended:[]});
+            }
+            $('.' + day + ' .occurance:visible', calendar).eachData('section',
+                function(section) {
+                    // Grow times to nearest containing half-hours.
+                    edgesByHalfHour[Math.floor(section.start * 2)]
+                        .started.push({section:section, time:section.start});
+                    edgesByHalfHour[Math.ceil(section.end * 2)]
+                        .ended.push({section:section, time:section.end});
+                });
+            var openSections = [];
+            var startTime = null;
+            for (var halfHourIndex in edgesByHalfHour) {
+                var time = halfHourIndex / 2.0;
+                var edges = edgesByHalfHour[halfHourIndex];
+                if (edges.started.length > 0 || edges.ended.length > 0) {
+                    if (startTime !== null) {
+                        var colors = $.map(openSections, function(section) {
+                            //TODO: LOOK UP COURSE COLOR
+                            return section.courseId - 1;
+                        });
+                        var text = $.map(openSections, function(section) {
+                            return section.id;
+                        }).join(', ');
+                        createConflict(day, startTime, time,
+                                       colors, text);
+                    }
+                    startTime = time;
+                }
+                for (var edgeIndex in edges.ended) {
+                    var edge = edges.ended[edgeIndex];
+                    console.log('  end: ' + edge.section.id);
+                    openSections.splice(openSections.indexOf(edge.section), 1);
+                }
+                for (var edgeIndex in edges.started) {
+                    var edge = edges.started[edgeIndex];
+                    console.log('  start: ' + edge.section.id);
+                    openSections.push(edge.section);
+                }
+            }
         }
     });
 });
