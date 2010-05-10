@@ -16,7 +16,7 @@ for color_index, row in enumerate(colors):
     print ('.diagonal.c%s' % color_index +
         ' { background-image: url("images/diagonal%s.gif"); }' % color_index)
 
-    color = row[1]
+    color = row[0]
     img = Image.new('P', (128,128), 0)
     img.putpalette((
         0,0,0,

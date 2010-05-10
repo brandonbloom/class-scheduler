@@ -280,9 +280,6 @@ $(function() {
                     setTimeTop(newOccurance, section.start);
                     var duration = Math.max(0.5, section.end - section.start);
                     newOccurance.css('height', timeHeight(duration));
-                    //TODO: NEXT LINE IS A TEMPORARY HACK FOR CONFLICTS
-                    newOccurance.css('margin-left',
-                                     (course.id - 1) * 25 + 'px');
                     $('td.day.' + day + ' .container').append(newOccurance);
                     occurances.push(newOccurance);
                     allOccurances.push(newOccurance);
@@ -398,7 +395,7 @@ $(function() {
         return ((x % y) + y) % y;
     };
 
-    var createConflict = function(day, start, duration, content) {
+    var createConflict = function(day, start, duration, colors, content) {
         var newConflict = conflictTemplate.clone();
         newConflict.css('margin-top', timeHeight(start) + 'px')
                    .css('height', timeHeight(duration));
@@ -407,7 +404,6 @@ $(function() {
         var STRIPE_HEIGHT = 128;
         var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
         var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
-        var colors = [0,1];
         var rows = Math.ceil(newConflict.height() / 112);
         var cols = Math.ceil(newConflict.width() / 16);
         for (var y = 0; y < rows; ++y) {
@@ -426,5 +422,6 @@ $(function() {
         $('.content', newConflict).text(content);
     };
 
-    createConflict('monday', 9, 2, "CONFLICT YO");
+    createConflict('tuesday', 12, 2, [0,1], "Test Conflict");
+    createConflict('thursday', 14, 1, [1,2,3], "Another conflict");
 });
