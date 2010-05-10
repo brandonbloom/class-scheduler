@@ -209,7 +209,7 @@ $(function() {
     var sectionListTemplate = $('.sections', templates);
     var sectionTemplate = $('.section', templates);
     var occuranceTemplate = $('.occurance', templates);
-    var conflictTemplate = $('.conflict', templates);
+    var eventTemplate = $('.event', templates);
 
     var scheduler = $('#scheduler');
     var courseList = $('#courseList', scheduler);
@@ -428,20 +428,17 @@ $(function() {
         return ((x % y) + y) % y;
     };
 
-    var createConflict = function(day, start, end, colors, content) {
-        var newConflict = conflictTemplate.clone();
-        sizeEvent(newConflict, start, end);
-        $('td.day.' + day + ' .container').append(newConflict);
+    var fillStripes = function(element, colors) {
         var STRIPE_RADIUS = 16;
         var STRIPE_HEIGHT = 128;
         var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
         var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
-        var rows = Math.ceil(newConflict.height() / 112);
-        var cols = Math.ceil(newConflict.width() / 16);
+        var rows = Math.ceil(element.height() / 112);
+        var cols = Math.ceil(element.width() / 16);
         for (var y = 0; y < rows; ++y) {
             var i = y * (MIN_X - 1);
             for (var x = MIN_X; x < cols; ++x) {
-                newConflict.append($('<div/>', {
+                element.append($('<div/>', {
                     class: 'diagonal c' + colors[mod(i, colors.length)],
                     css: {
                         left: x * STRIPE_RADIUS - STRIPE_RADIUS / 4 + 'px',
@@ -451,11 +448,29 @@ $(function() {
                 ++i;
             }
         }
-        $('.content', newConflict).text(content);
     };
 
-    $('#voodoo').click(function() {
-        $('.conflict', calendar).remove();
+    var createEvent = function(day, start, end, sections) {
+        var colors = $.map(sections, function(section) {
+            //TODO: LOOK UP COURSE COLOR
+            return section.courseId - 1;
+        });
+        var newEvent = eventTemplate.clone();
+        sizeEvent(newEvent, start, end);
+        $('td.day.' + day + ' .container').append(newEvent);
+        if (sections.length > 1) {
+            fillStripes(newEvent, colors);
+        } else {
+            newEvent.addClass('color' + colors[0]);
+        }
+        var text = $.map(sections, function(section) {
+            return section.id;
+        }).join(', ');
+        $('.content', newEvent).text(text);
+    };
+
+    var rebuildEvents = function() {
+        $('.event', calendar).remove();
         for (var dayIndex in DAYS) {
             var day = DAYS[dayIndex];
             console.log('--' + day + '--');
@@ -480,15 +495,7 @@ $(function() {
                 var edges = edgesByHalfHour[halfHourIndex];
                 if (edges.started.length > 0 || edges.ended.length > 0) {
                     if (startTime !== null) {
-                        var colors = $.map(openSections, function(section) {
-                            //TODO: LOOK UP COURSE COLOR
-                            return section.courseId - 1;
-                        });
-                        var text = $.map(openSections, function(section) {
-                            return section.id;
-                        }).join(', ');
-                        createConflict(day, startTime, time,
-                                       colors, text);
+                        createEvent(day, startTime, time, openSections);
                     }
                     startTime = time;
                 }
@@ -504,5 +511,7 @@ $(function() {
                 }
             }
         }
-    });
+    };
+
+    $('#voodoo').click(rebuildEvents);
 });
