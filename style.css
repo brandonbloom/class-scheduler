@@ -9,11 +9,12 @@
 #courseList {
     margin-left: 8px;
     margin-right: 8px;
+    border: 1px solid #CBCBCB;
+    border-top: none;
 }
 
 #courseList .course {
-    border-top: 1px solid gray;
-    border-bottom: 1px solid gray;
+    border-top: 1px solid #CBCBCB;
     padding: 10px;
 }
 
@@ -32,18 +33,14 @@
     font-weight: bold;
 }
 
-.checkbox {
-    margin-left: -18px;
-}
-
 .sectionType {
     margin-left: 15px;
-    padding: 5px;
+    padding-top: 4px;
 }
 
 .sections {
     margin-left: 15px;
-    padding: 5px;
+    padding: 4px;
 }
 
 div.section {
