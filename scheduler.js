@@ -192,6 +192,10 @@ $(function() {
         element.css('margin-top',
                     timeHeight(time) + 'px');
     }
+    var sizeEvent = function(element, start, duration) {
+        element.css('margin-top', timeHeight(start) + 1 + 'px')
+               .css('height', timeHeight(duration) - 1 + 'px');
+    }
 
     for (var hour = 0; hour < 24; hour++) {
         // Hour markers
@@ -277,9 +281,8 @@ $(function() {
                         .text(course.subject.abbreviation);
                     newOccurance.children('.course').text(course.number);
                     newOccurance.children('.section').text(section.number);
-                    setTimeTop(newOccurance, section.start);
                     var duration = Math.max(0.5, section.end - section.start);
-                    newOccurance.css('height', timeHeight(duration));
+                    sizeEvent(newOccurance, section.start, duration);
                     $('td.day.' + day + ' .container').append(newOccurance);
                     occurances.push(newOccurance);
                     allOccurances.push(newOccurance);
@@ -397,8 +400,7 @@ $(function() {
 
     var createConflict = function(day, start, duration, colors, content) {
         var newConflict = conflictTemplate.clone();
-        newConflict.css('margin-top', timeHeight(start) + 'px')
-                   .css('height', timeHeight(duration));
+        sizeEvent(newConflict, start, duration);
         $('td.day.' + day + ' .container').append(newConflict);
         var STRIPE_RADIUS = 16;
         var STRIPE_HEIGHT = 128;
@@ -424,4 +426,8 @@ $(function() {
 
     createConflict('tuesday', 12, 2, [0,1], "Test Conflict");
     createConflict('thursday', 14, 1, [1,2,3], "Another conflict");
+
+    $('#voodoo').click(function() {
+        $('.conflict', calendar).remove();
+    });
 });
