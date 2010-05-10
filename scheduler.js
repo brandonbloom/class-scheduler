@@ -219,7 +219,7 @@ $(function() {
         }
     }
 
-    jQuery.fn.eachData = function(key, callback) {
+    $.fn.eachData = function(key, callback) {
         return this.each(function(index, element) {
             var value = $(this).data(key);
             if (value !== undefined && value !== null) {
@@ -230,15 +230,17 @@ $(function() {
         });
     };
 
-    jQuery.fn.bindHighlighting = function(settings) {
+    $.fn.dataEQ = function(key, value) {
+        return this.filter(function() {
+            return $(this).data(key) === value;
+        });
+    }
+
+    $.fn.bindHighlighting = function(settings) {
         var elements = $(settings.selector, this);
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
-                elements.each(function() {
-                    if ($(this).data(settings.key) === value) {
-                        $(this).addClass(settings.cls);
-                    }
-                });
+                elements.dataEQ(settings.key, value).addClass(settings.cls);
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
             });
@@ -346,15 +348,12 @@ $(function() {
     });
 
     var selectSection = function(section, selected) {
-        $('.occurance', calendar).each(function () {
-            if (section === $(this).data('section')) {
-                if (selected) {
-                    $(this).addClass('selected');
-                } else {
-                    $(this).removeClass('selected');
-                }
-            }
-        });
+        var occurances = $('.occurance', calendar).dataEQ('section', section);
+        if (selected) {
+            $(occurances).addClass('selected');
+        } else {
+            $(occurances).removeClass('selected');
+        }
     };
 
     $('.course .checkbox', courseList).change(function() {
@@ -362,18 +361,14 @@ $(function() {
         if ($(this).attr('checked')) {
             var courseElement = $(this).parent();
             $('.radio', courseElement).change();
-            $('.sectionType', courseElement).andSelf().each(function() {
-                var section = $(this).data('section');
-                if (section) {
+            $('.sectionType', courseElement).andSelf()
+                .eachData('section', function(section) {
                     selectSection(section, true);
-                }
-            });
+                });
         } else {
-            $('.occurance', calendar).each(function() {
-                if (course === $(this).data('course')) {
-                    $(this).removeClass('selected');
-                }
-            });
+            $('.occurance', calendar)
+                .dataEQ('course', course)
+                .removeClass('selected');
         }
     });
 
