@@ -378,7 +378,6 @@ $(function() {
     };
 
     scheduler.bind('selectionChanged', function() {
-        console.log('selectionChanged');
         rebuildEvents();
     });
 
@@ -387,10 +386,10 @@ $(function() {
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
                 elements.dataEQ(settings.key, value).addClass(settings.cls);
-                scheduler.trigger('selectionChanged');
+                //scheduler.trigger('selectionChanged');
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
-                scheduler.trigger('selectionChanged');
+                //scheduler.trigger('selectionChanged');
             });
         });
         return this;
@@ -553,6 +552,15 @@ $(function() {
         var selected = $(this).attr('checked');
         selectSection(section, selected);
     });
+
+    var resizeContent = function() {
+        //TODO: This is a bit of a hack with magic numbers.
+        $('#courseList').height($(window).height() - 50);
+        $('#calendar .scroller').height($(window).height() - 68);
+    };
+
+    resizeContent();
+    $(window).resize(resizeContent);
 
     $('.scroller', calendar).scrollTop(timeHeight(8.75));
 });

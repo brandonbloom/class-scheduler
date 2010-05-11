@@ -4,18 +4,25 @@
 
 #scratch {
     width: 225px;
+    min-width: 225px;
+}
+
+#actions {
+    padding-bottom: 10px;
 }
 
 #courseList {
-    margin-left: 8px;
-    margin-right: 8px;
-    border: 1px solid #CBCBCB;
     border-top: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-right: 8px;
+    border-top: 1px solid #CBCBCB;
 }
 
 #courseList .course {
-    border-top: 1px solid #CBCBCB;
     padding: 10px;
+    border: 1px solid #CBCBCB;
+    border-top: none;
 }
 
 .course .controls {
@@ -50,6 +57,10 @@ td {
     padding: 0px;
 }
 
+#scheduler {
+    width: 100%
+}
+
 #scheduler tr {
     vertical-align: top;
 }
@@ -58,6 +69,10 @@ td {
     background-color: #DDF1FF;
     padding: 8px;
     border: 1px solid #CBCBCB;
+    /* TODO: Magic numbers for widths */
+    min-width: 500px;
+    max-width: 813;
+    margin: auto;
 }
 
 #calendar table {
@@ -193,4 +208,3 @@ td .container {
 .color7.active, .color7 .active { background-color: #ffaa80; }
 .color7.targeted, .color7 .targeted { background-color: #ff8040; }
 .diagonal.c7 { background-image: url("images/diagonal7.gif"); }
-
