@@ -209,7 +209,6 @@ $.fn.checkboxify = function() {
         $(this).data('checked', $(this).is(':checked'));
         $(this).click(function(){
             var radio = $(this);
-            console.log(radio.data('checked'));
             if (radio.data('checked')) {
                 radio.removeAttr('checked').data('checked', false).change();
             } else {
@@ -490,8 +489,8 @@ $(function() {
 
     var selectSection = function(section, selected) {
         var course = courses[section.courseId];
-        selectCourse(course, selected);
         if (selected) {
+            selectCourse(course, true);
             if (!selectedSections.hasOwnProperty(section.id)) {
                 var siblings = course.sections[section.type];
                 for (var siblingIndex in siblings) {
