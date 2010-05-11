@@ -111,7 +111,7 @@ td.day {
 .forceHeight {
     visibility: hidden;
     width: 0px;
-    height: 1320px; /* See the timeHeight function */
+    height: 1344px; /* See the timeHeight function */
 }
 
 td .container {
@@ -137,8 +137,8 @@ td .container {
 .businessHours {
     position: absolute;
     width: 100%;
-    top: 495px;
-    height: 440px;
+    top: 504px; /* See the timeHeight function */
+    height: 448px; /* See the timeHeight function */
     background-color: white;
 }
 

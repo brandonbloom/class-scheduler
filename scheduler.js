@@ -225,7 +225,7 @@ $(function() {
     var calendar = $('#calendar');
 
     var timeHeight = function(time) {
-        return time * 55;
+        return time * 56;
     };
     var setTimeTop = function(element, time) {
         element.css('margin-top',
@@ -540,5 +540,5 @@ $(function() {
         }
     });
 
-    $('.scroller', calendar).scrollTop(timeHeight(7.75));
+    $('.scroller', calendar).scrollTop(timeHeight(8.75));
 });
