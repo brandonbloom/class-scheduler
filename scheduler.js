@@ -204,6 +204,23 @@ function mod(x, y) {
     return ((x % y) + y) % y;
 };
 
+$.fn.checkboxify = function() {
+    return this.each(function() {
+        $(this).data('checked', $(this).is(':checked'));
+        $(this).click(function(){
+            var radio = $(this);
+            console.log(radio.data('checked'));
+            if (radio.data('checked')) {
+                radio.removeAttr('checked').data('checked', false).change();
+            } else {
+                $('input[name="' + radio.attr('name') + '"]')
+                    .removeAttr('checked').data('checked', false);
+                radio.attr('checked', true).data('checked', true);
+            }
+        });
+    });
+};
+
 //TODO: Support weekends
 var DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
@@ -531,13 +548,11 @@ $(function() {
         }
     });
 
-    $('.course .radio', courseList).change(function() {
+    $('.section .radio', courseList).checkboxify()
+    .change(function() {
         var section = $(this).parent().data('section');
         var selected = $(this).attr('checked');
-        console.log(section.id);
-        if (selected) {
-            selectSection(section, true);
-        }
+        selectSection(section, selected);
     });
 
     $('.scroller', calendar).scrollTop(timeHeight(8.75));
