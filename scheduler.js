@@ -299,6 +299,10 @@ $(function() {
         }
         positionElement(newEvent, top, height + 1);
         positionElement($('.content', newEvent), 1, height - 1);
+        var addData = function(element, section) {
+            element.data('course', courses[section.courseId])
+                   .data('section', section);
+        }
         if (sections.length > 1) {
             //TODO: Handle course self-conflicts.
             // Maybe show white stripes?
@@ -315,6 +319,7 @@ $(function() {
                 var stripeContainer = $('<div/>', {
                     'class' : 'stripes ' + color
                 });
+                addData(stripeContainer, section);
                 var adjustTop = (section.start == start ? 1 : 0);
                 var adjustHeight = (section.end == end ? 0 : 1);
                 positionElement(stripeContainer, adjustTop,
@@ -340,8 +345,11 @@ $(function() {
                 }
             }
         } else {
-            var color = courses[sections[0].courseId].color;
-            $('.content', newEvent).addClass(color);
+            var section = sections[0];
+            var content = $('.content', newEvent);
+            addData(content, section);
+            var color = courses[section.courseId].color;
+            content.addClass(color);
         }
         var text = $.map(sections, function(section) {
             return section.id;
@@ -349,7 +357,8 @@ $(function() {
         $('.content', newEvent).text(text);
     };
 
-    var addEvents = function(sections) {
+    var showEvents = function(sections) {
+        $('.event', calendar).remove();
         for (var dayIndex in DAYS) {
             var day = DAYS[dayIndex];
             // Maps halfHourIndex to sections with that start or end time.
@@ -398,8 +407,7 @@ $(function() {
     };
 
     scheduler.bind('selectionChanged', function() {
-        $('.event', calendar).remove();
-        addEvents(selectedSections);
+        showEvents(selectedSections);
     });
 
     $.fn.bindHighlighting = function(settings) {
@@ -407,7 +415,8 @@ $(function() {
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
                 elements.dataEQ(settings.key, value).addClass(settings.cls);
-                // BLAH TODO TODO addEvents(
+                var sections = selectedSections;
+                showEvents(selectedSections);
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
             });
@@ -495,20 +504,6 @@ $(function() {
         addCourse(testData[i]);
     }
 
-    scheduler.bindHighlighting({
-        selector: 'div.course',
-        key: 'course',
-        cls: 'active'
-    }).bindHighlighting({
-        selector: 'div.course, div.section, .sectionType',
-        key: 'section',
-        cls: 'targeted'
-    });
-
-    $('.course', scheduler).eachData('course', function(course) {
-        //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
-    });
-
     var selectSection = function(section, selected) {
         var course = courses[section.courseId];
         if (selected) {
@@ -557,6 +552,25 @@ $(function() {
             scheduler.trigger('selectionChanged');
         }
     };
+
+    $('.course', courseList).mouseenter(function() {
+        $(this).addClass('a');
+        var course = $(this).data('course');
+        var allSections = values(selectedSections);
+        for (var sectionType in course.sections) {
+            var sections = course.sections[sectionType];
+            for (var sectionIndex in sections) {
+                var section = sections[sectionIndex];
+                if (allSections.indexOf(section) == -1) {
+                    allSections.push(section);
+                }
+            }
+        }
+        showEvents(allSections);
+    }).mouseleave(function() {
+        $(this).removeClass('a');
+        scheduler.trigger('selectionChanged');
+    });
 
     $('.course .checkbox', courseList).change(function() {
         var parent = $(this).parent();
