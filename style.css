@@ -95,8 +95,7 @@ td.day {
 .forceHeight {
   visibility: hidden;
   width: 0px;
-  height: 1344px;
-  /* See the timeHeight function */ }
+  height: 1344px; }
 
 td .container {
   position: relative;
@@ -119,9 +118,7 @@ td .container {
   position: absolute;
   width: 100%;
   top: 504px;
-  /* See the timeHeight function */
   height: 448px;
-  /* See the timeHeight function */
   background-color: white; }
 
 .event {

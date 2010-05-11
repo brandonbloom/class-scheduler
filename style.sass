@@ -1,3 +1,6 @@
+$hourHeight: 56px
+$borderColor: #CBCBCB
+
 #templates
   display: none
 
@@ -13,10 +16,10 @@
   overflow-x: hidden
   overflow-y: auto
   margin-right: 8px
-  border-top: 1px solid #CBCBCB
+  border-top: 1px solid $borderColor
   .course
     padding: 10px
-    border: 1px solid #CBCBCB
+    border: 1px solid $borderColor
     border-top: none
 
 .course .controls
@@ -50,7 +53,7 @@ td
 #calendar
   background-color: #DDF1FF
   padding: 8px
-  border: 1px solid #CBCBCB
+  border: 1px solid $borderColor
   /* TODO: Magic numbers for widths
   min-width: 500px
   max-width: 813
@@ -70,14 +73,14 @@ td.day
   .scrollbar
     width: 9px
   td
-    border-right: 1px solid #CBCBCB
+    border-right: 1px solid $borderColor
 
 .scroller
   overflow-x: hidden
   overflow-y: scroll
   height: 500px
   /* TODO: Control with Javascript
-  border: 1px solid #CBCBCB
+  border: 1px solid $borderColor
 
 .times
   width: 40px
@@ -96,8 +99,7 @@ td.day
 .forceHeight
   visibility: hidden
   width: 0px
-  height: 1344px
-  /* See the timeHeight function
+  height: 24 * $hourHeight
 
 td .container
   position: relative
@@ -119,10 +121,9 @@ td .container
 .businessHours
   position: absolute
   width: 100%
-  top: 504px
-  /* See the timeHeight function
-  height: 448px
-  /* See the timeHeight function
+  // 9 to 5
+  top: 9 * $hourHeight
+  height: 8 * $hourHeight
   background-color: white
 
 .event
