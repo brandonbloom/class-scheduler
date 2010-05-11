@@ -229,6 +229,8 @@ $(function() {
     var selectedCourses = {};
     var selectedSections = {};
 
+    var hoveredCourse = null;
+
     var templates = $('#templates');
     var courseTemplate = $(templates).children('.course');
     var sectionTypeTemplate = $('.sectionType', templates);
@@ -302,6 +304,11 @@ $(function() {
         var addData = function(element, section) {
             element.data('course', courses[section.courseId])
                    .data('section', section);
+            if (hoveredCourse !== null &&
+                hoveredCourse.id === section.courseId &&
+                selectedSections.hasOwnProperty(section.id)) {
+                element.addClass('a');
+            }
         }
         if (sections.length > 1) {
             //TODO: Handle course self-conflicts.
@@ -347,9 +354,9 @@ $(function() {
         } else {
             var section = sections[0];
             var content = $('.content', newEvent);
-            addData(content, section);
             var color = courses[section.courseId].color;
             content.addClass(color);
+            addData(content, section);
         }
         var text = $.map(sections, function(section) {
             return section.id;
@@ -409,20 +416,6 @@ $(function() {
     scheduler.bind('selectionChanged', function() {
         showEvents(selectedSections);
     });
-
-    $.fn.bindHighlighting = function(settings) {
-        var elements = $(settings.selector, this);
-        elements.eachData(settings.key, function(value) {
-            $(this).mouseenter(function() {
-                elements.dataEQ(settings.key, value).addClass(settings.cls);
-                var sections = selectedSections;
-                showEvents(selectedSections);
-            }).mouseleave(function() {
-                elements.removeClass(settings.cls);
-            });
-        });
-        return this;
-    };
 
     var addCourse = function(course) {
         // TODO: Next line should pull available color from a list.
@@ -556,6 +549,7 @@ $(function() {
     $('.course', courseList).mouseenter(function() {
         $(this).addClass('a');
         var course = $(this).data('course');
+        hoveredCourse = course;
         var allSections = values(selectedSections);
         for (var sectionType in course.sections) {
             var sections = course.sections[sectionType];
@@ -568,6 +562,7 @@ $(function() {
         }
         showEvents(allSections);
     }).mouseleave(function() {
+        hoveredCourse = null;
         $(this).removeClass('a');
         scheduler.trigger('selectionChanged');
     });
