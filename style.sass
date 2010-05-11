@@ -101,7 +101,7 @@ td.day
   width: 0px
   height: 24 * $hourHeight
 
-td .container
+.relativeContainer
   position: relative
   width: 100%
   height: 100%
@@ -131,16 +131,21 @@ td .container
   overflow: hidden
   width: 100%
 
-.event .content
+.container
   position: relative
+  width: 100%
+  height: 100%
+
+.event .content
+  position: absolute
+  overflow: hidden
   width: 100%
   z-index: 100
 
 .stripes
-  position: relative
+  position: absolute
   overflow: hidden
   width: 100%
-  height: 0px
 
 .stripes div
   position: absolute

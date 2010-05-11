@@ -255,12 +255,12 @@ $(function() {
                      (hour < 12 ? 'am' : 'pm') +
                      '&nbsp;</div>');
         setTimeTop(time, hour);
-        $('td.times .container').append(time);
+        $('td.times > .relativeContainer').append(time);
         // Horizontal rules
         for (var dayIndex in DAYS) {
             var day = DAYS[dayIndex];
             var dayCell = $('td.day.' + day);
-            var container = $('.' + day + ' .container');
+            var container = $('.' + day + ' > .relativeContainer');
             var hourRule = $('<div class="hour"/>');
             setTimeTop(hourRule, hour);
             container.append(hourRule);
@@ -292,10 +292,13 @@ $(function() {
         var duration = end - start;
         var top = timeHeight(start);
         var height = timeHeight(duration);
-        $('td.day.' + day + ' .container').append(newEvent);
-        $('.content', newEvent)
-            .css('margin-top', top + 1 + 'px')
-            .css('height', height - 1 + 'px');
+        $('td.day.' + day + ' > .relativeContainer').append(newEvent);
+        var positionElement = function(element, top, height) {
+            element.css('margin-top', top + 'px')
+                   .css('height', height + 'px');
+        }
+        positionElement(newEvent, top, height + 1);
+        positionElement($('.content', newEvent), 1, height - 1);
         if (sections.length > 1) {
             //TODO: Handle course self-conflicts.
             // Maybe show white stripes?
@@ -312,23 +315,23 @@ $(function() {
                 var stripeContainer = $('<div/>', {
                     'class' : 'stripes ' + color
                 });
-                var adjustTop = 1;//(section.start == start ? 1 : 0);
-                var adjustHeight = 0;//(section.end == end ? 1 : 0);
-                stripeContainer
-                    .css('margin-top', -height + adjustTop + 'px')
-                    .css('height', height + adjustTop + adjustHeight + 'px');
+                var adjustTop = (section.start == start ? 1 : 0);
+                var adjustHeight = (section.end == end ? 0 : 1);
+                positionElement(stripeContainer, adjustTop,
+                                height + adjustHeight - adjustTop);
                 stripeContainers.push(stripeContainer);
-                newEvent.append(stripeContainer);
+                $('.relativeContainer', newEvent).prepend(stripeContainer);
             }
             for (var y = 0; y < rows; ++y) {
                 var i = y * (MIN_X - 1);
                 for (var x = MIN_X; x < cols; ++x) {
                     var sectionIndex = mod(i, sections.length)
                     var section = sections[sectionIndex];
+                    var adjust = (section.start == start ? 1 : 0);
                     stripeContainers[sectionIndex].append($('<div/>', {
                         css: {
                             left: (x * STRIPE_RADIUS -
-                                   STRIPE_RADIUS / 4) + 'px',
+                                   STRIPE_RADIUS / 4) + adjust + 'px',
                             top: (y * STRIPE_INNER_HEIGHT -
                                   STRIPE_RADIUS / 2) - height + 'px'
                         }
