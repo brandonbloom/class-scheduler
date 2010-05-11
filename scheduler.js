@@ -229,7 +229,7 @@ $(function() {
     var selectedCourses = {};
     var selectedSections = {};
 
-    var hoveredCourse = null;
+    var hoveredCourseId = null;
 
     var templates = $('#templates');
     var courseTemplate = $(templates).children('.course');
@@ -304,8 +304,7 @@ $(function() {
         var addData = function(element, section) {
             element.data('course', courses[section.courseId])
                    .data('section', section);
-            if (hoveredCourse !== null &&
-                hoveredCourse.id === section.courseId &&
+            if (hoveredCourseId === section.courseId &&
                 selectedSections.hasOwnProperty(section.id)) {
                 element.addClass('a');
             }
@@ -549,7 +548,7 @@ $(function() {
     $('.course', courseList).mouseenter(function() {
         $(this).addClass('a');
         var course = $(this).data('course');
-        hoveredCourse = course;
+        hoveredCourseId = course.id;
         var allSections = values(selectedSections);
         for (var sectionType in course.sections) {
             var sections = course.sections[sectionType];
@@ -562,9 +561,21 @@ $(function() {
         }
         showEvents(allSections);
     }).mouseleave(function() {
-        hoveredCourse = null;
+        hoveredCourseId = null;
         $(this).removeClass('a');
         scheduler.trigger('selectionChanged');
+    });
+
+    $('div', courseList).eachData('section', function(section) {
+        var color = courses[section.courseId].color;
+        $(this).mouseenter(function() {
+            $(this).addClass('solid ' + color + ' b');
+            $('*', calendar).dataEQ('section', section).addClass('b');
+        }).mouseleave(function() {
+            $(this).removeClass('b')
+            .filter(':not(.course)').removeClass('solid ' + color);
+            $('*', calendar).dataEQ('section', section).removeClass('b');
+        });
     });
 
     $('.course .checkbox', courseList).change(function() {
