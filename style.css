@@ -95,7 +95,7 @@ td.day {
   width: 0px;
   height: 1344px; }
 
-.relativeContainer {
+.container {
   position: relative;
   width: 100%;
   height: 100%; }

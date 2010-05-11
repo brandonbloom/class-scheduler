@@ -255,12 +255,12 @@ $(function() {
                      (hour < 12 ? 'am' : 'pm') +
                      '&nbsp;</div>');
         setTimeTop(time, hour);
-        $('td.times > .relativeContainer').append(time);
+        $('td.times .container').append(time);
         // Horizontal rules
         for (var dayIndex in DAYS) {
             var day = DAYS[dayIndex];
             var dayCell = $('td.day.' + day);
-            var container = $('.' + day + ' > .relativeContainer');
+            var container = $('.' + day + ' .container');
             var hourRule = $('<div class="hour"/>');
             setTimeTop(hourRule, hour);
             container.append(hourRule);
@@ -292,7 +292,7 @@ $(function() {
         var duration = end - start;
         var top = timeHeight(start);
         var height = timeHeight(duration);
-        $('td.day.' + day + ' > .relativeContainer').append(newEvent);
+        $('td.day.' + day + ' .container').append(newEvent);
         var positionElement = function(element, top, height) {
             element.css('margin-top', top + 'px')
                    .css('height', height + 'px');
@@ -320,7 +320,7 @@ $(function() {
                 positionElement(stripeContainer, adjustTop,
                                 height + adjustHeight - adjustTop);
                 stripeContainers.push(stripeContainer);
-                $('.relativeContainer', newEvent).prepend(stripeContainer);
+                $(newEvent).prepend(stripeContainer);
             }
             for (var y = 0; y < rows; ++y) {
                 var i = y * (MIN_X - 1);
