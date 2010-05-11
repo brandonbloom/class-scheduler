@@ -1,4 +1,4 @@
-var courses = [
+var testData = [
     {
         'id' : 1,
         'subject' : {
@@ -208,12 +208,16 @@ function mod(x, y) {
 var DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
 $(function() {
+    // These map IDs to their corresponding objects.
+    var courses = {};
+    var selectedCourses = {};
+    var selectedSections = {};
+
     var templates = $('#templates');
     var courseTemplate = $(templates).children('.course');
     var sectionTypeTemplate = $('.sectionType', templates);
     var sectionListTemplate = $('.sections', templates);
     var sectionTemplate = $('.section', templates);
-    var occuranceTemplate = $('.occurance', templates);
     var eventTemplate = $('.event', templates);
 
     var scheduler = $('#scheduler');
@@ -273,6 +277,7 @@ $(function() {
     }
 
     var fillStripes = function(element, colors) {
+        //TODO: Handle (colors.length == 0) Maybe show white stripes?
         var STRIPE_RADIUS = 16;
         var STRIPE_HEIGHT = 128;
         var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
@@ -323,14 +328,16 @@ $(function() {
             for (var hour = 0; hour <= 48; ++hour) {
                 edgesByHalfHour.push({started:[], ended:[]});
             }
-            $('.' + day + ' .occurance:visible', calendar).eachData('section',
-                function(section) {
+            for (var sectionId in selectedSections) {
+                var section = selectedSections[sectionId];
+                if (section.days.indexOf(day) != -1) {
                     // Grow times to nearest containing half-hours.
                     edgesByHalfHour[Math.floor(section.start * 2)]
                         .started.push({section:section, time:section.start});
                     edgesByHalfHour[Math.ceil(section.end * 2)]
                         .ended.push({section:section, time:section.end});
-                });
+                }
+            }
             var openSections = [];
             var startTime = null;
             for (var halfHourIndex in edgesByHalfHour) {
@@ -354,32 +361,39 @@ $(function() {
         }
     };
 
+    scheduler.bind('selectionChanged', function() {
+        console.log('selectionChanged');
+        rebuildEvents();
+    });
+
     $.fn.bindHighlighting = function(settings) {
         var elements = $(settings.selector, this);
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
                 elements.dataEQ(settings.key, value).addClass(settings.cls);
-                rebuildEvents();
+                scheduler.trigger('selectionChanged');
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
-                rebuildEvents();
+                scheduler.trigger('selectionChanged');
             });
         });
         return this;
     };
 
     var addCourse = function(course) {
+        courses[course.id] = course;
         // Course
         var newCourse = courseTemplate.clone();
         newCourse.data('course', course);
         var sectionTypeCount = Object.size(course.sections);
-        newCourse.children('.subject').text(course.subject.name);
-        newCourse.children('.name').text(course.name);
-        newCourse.children('.number').text(course.number);
+        var checkboxId = 'course_' + course.id;
+        newCourse.children('input').attr('id', checkboxId);
+        newCourse.children('label').attr('for', checkboxId);
+        newCourse.find('.subject').text(course.subject.name);
+        newCourse.find('.name').text(course.name);
+        newCourse.find('.number').text(course.number);
         var sectionTypeCount = Object.size(course.sections);
-        var allOccurances = [];
         var sectionTypeIndex = 0;
-        var occurances;
         for (var sectionType in course.sections) {
             // Section List
             var sections = course.sections[sectionType];
@@ -388,34 +402,19 @@ $(function() {
                 // Section
                 var section = sections[sectionIndex];
                 section.courseId = course.id;
+                section.type = sectionType;
                 var newSection = sectionTemplate.clone();
                 newSection.data('section', section);
                 var sectionTypeName = 'section_type_' + course.id +
                                       '_' + sectionTypeIndex;
-                var sectionId = 'section_' + course.id + '_' + section.id;
+                var radioId = 'section_' + course.id + '_' + section.id;
                 newSection.children('input')
                     .attr('name', sectionTypeName)
-                    .attr('id', sectionId);
+                    .attr('id', radioId);
                 newSection.children('label')
                     .text(section.number + ' ~ ' + section.id)
-                    .attr('for', sectionId);
+                    .attr('for', radioId);
                 newSectionList.append(newSection)
-                occurances = [];
-                for (var dayIndex in section.days) {
-                    // Occurance
-                    var day = section.days[dayIndex];
-                    var newOccurance = occuranceTemplate.clone();
-                    newOccurance.data('course', course);
-                    newOccurance.data('section', section);
-                    newOccurance.children('.subject')
-                        .text(course.subject.abbreviation);
-                    newOccurance.children('.course').text(course.number);
-                    newOccurance.children('.section').text(section.number);
-                    sizeEvent(newOccurance, section.start, section.end);
-                    $('td.day.' + day + ' .container').append(newOccurance);
-                    occurances.push(newOccurance);
-                    allOccurances.push(newOccurance);
-                }
             }
             if (sectionTypeCount > 1) {
                 // Section Type
@@ -442,78 +441,103 @@ $(function() {
         }
         // Course Events
         $('.remove', newCourse).click(function() {
-            courses.splice(courses.indexOf(course), 1);
+            var course = $(this).parents('.course').data('course');
+            delete courses[course.id];
             $(this).closest('.course').slideUp(300, function() {
                 $(this).remove();
             });
-            for (var occuranceIndex in allOccurances) {
-                allOccurances[occuranceIndex].remove();
-            }
+            scheduler.trigger('selectionChanged');
         });
         courseList.append(newCourse);
     };
 
-    for (var i in courses) {
-        addCourse(courses[i]);
+    for (var i in testData) {
+        addCourse(testData[i]);
     }
 
     scheduler.bindHighlighting({
-        selector: 'div.course, .occurance',
+        selector: 'div.course',
         key: 'course',
         cls: 'active'
     }).bindHighlighting({
-        selector: 'div.course, div.section, .sectionType, .occurance',
+        selector: 'div.course, div.section, .sectionType',
         key: 'section',
         cls: 'targeted'
     });
 
-    $('.course, .occurance', scheduler).eachData('course', function(course) {
+    $('.course', scheduler).eachData('course', function(course) {
         //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
         var courseColor = 'color' + (course.id - 1)
         $(this).addClass(courseColor);
     });
 
     var selectSection = function(section, selected) {
-        var occurances = $('.occurance', calendar).dataEQ('section', section);
+        var course = courses[section.courseId];
+        selectCourse(course, selected);
         if (selected) {
-            $(occurances).addClass('selected');
-        } else {
-            $(occurances).removeClass('selected');
+            if (!selectedSections.hasOwnProperty(section.id)) {
+                var siblings = course.sections[section.type];
+                for (var siblingIndex in siblings) {
+                    var sibling = siblings[siblingIndex];
+                    delete selectedSections[sibling.id];
+                }
+                selectedSections[section.id] = section;
+                scheduler.trigger('selectionChanged');
+            }
+        } else if (delete selectedSections[section.id]) {
+            scheduler.trigger('selectionChanged');
+        }
+    };
+
+    var selectCourse = function(course, selected) {
+        if (selected) {
+            if (!selectedCourses.hasOwnProperty(course.id)) {
+                //TODO: This checkbox should listen for this as an event.
+                $('.course', courseList)
+                    .dataEQ('course', course)
+                    .find('.checkbox')
+                    .attr('checked', true);
+                selectedCourses[course.id] = course;
+                // Automatically add singular sections of a section type.
+                for (var sectionType in course.sections) {
+                    var sections = course.sections[sectionType];
+                    if (sections.length == 1) {
+                        selectSection(sections[0], true);
+                    }
+                }
+                scheduler.trigger('selectionChanged');
+            }
+        } else if (delete selectedCourses[course.id]) {
+            // Clear section selections.
+            for (var sectionType in course.sections) {
+                var sections = course.sections[sectionType];
+                for (var sectionIndex in sections) {
+                    var section = sections[sectionIndex];
+                    delete selectedSections[section.id];
+                }
+            }
+            scheduler.trigger('selectionChanged');
         }
     };
 
     $('.course .checkbox', courseList).change(function() {
-        var course = $(this).parent().data('course');
-        if ($(this).attr('checked')) {
-            var courseElement = $(this).parent();
-            $('.radio', courseElement).change();
-            $('.sectionType', courseElement).andSelf()
-                .eachData('section', function(section) {
-                    selectSection(section, true);
-                });
-        } else {
-            $('.occurance', calendar)
-                .dataEQ('course', course)
-                .removeClass('selected');
+        var parent = $(this).parent();
+        var course = parent.data('course');
+        var selected = $(this).attr('checked');
+        selectCourse(course, selected);
+        if (selected) {
+            // Re-select already radio-filled choices
+            $('.radio', parent).change();
         }
     });
 
     $('.course .radio', courseList).change(function() {
-        $('div.section', $(this).closest('.sections')).each(function() {
-            var section = $(this).data('section');
-            var selected = $('.radio', this).attr('checked');
-            if (selected) {
-                $(this).closest('.course').children('.checkbox').each(
-                    function() {
-                        var courseSelected = $(this).attr('checked');
-                        if (!courseSelected) {
-                            $(this).attr('checked', true)
-                                   .triggerHandler('change');
-                        }
-                   });
-            }
-            selectSection(section, selected);
-        });
+        var section = $(this).parent().data('section');
+        var selected = $(this).attr('checked');
+        console.log(section.id);
+        if (selected) {
+            selectSection(section, true);
+        }
     });
 
     $('.scroller', calendar).scrollTop(timeHeight(7.75));

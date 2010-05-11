@@ -29,7 +29,7 @@
     text-align: center;
 }
 
-.course > .name {
+.course > label > .name {
     font-weight: bold;
 }
 
@@ -140,17 +140,6 @@ td .container {
     top: 495px;
     height: 440px;
     background-color: white;
-}
-
-.occurance {
-    position: absolute;
-    visibility: hidden;
-    width: 100%;
-    display: none;
-}
-
-.occurance.active, .occurance.selected {
-    display: block;
 }
 
 .event {
