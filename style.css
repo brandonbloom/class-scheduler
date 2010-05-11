@@ -1,210 +1,221 @@
 #templates {
-    display: none;
-}
+  display: none; }
 
 #scratch {
-    width: 225px;
-    min-width: 225px;
-}
+  width: 225px;
+  min-width: 225px; }
 
 #actions {
-    padding-bottom: 10px;
-}
+  padding-bottom: 10px; }
 
 #courseList {
-    border-top: none;
-    overflow-x: hidden;
-    overflow-y: auto;
-    margin-right: 8px;
-    border-top: 1px solid #CBCBCB;
-}
-
-#courseList .course {
+  border-top: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-right: 8px;
+  border-top: 1px solid #cbcbcb; }
+  #courseList .course {
     padding: 10px;
-    border: 1px solid #CBCBCB;
-    border-top: none;
-}
+    border: 1px solid #cbcbcb;
+    border-top: none; }
 
 .course .controls {
-    float: right;
-}
+  float: right; }
 
 .controls div {
-    width: 16px;
-    height: 16px;
-    border: 1px solid gray;
-    text-align: center;
-}
+  width: 16px;
+  height: 16px;
+  border: 1px solid gray;
+  text-align: center; }
 
 .course > label > .name {
-    font-weight: bold;
-}
+  font-weight: bold; }
 
 .sectionType {
-    margin-left: 15px;
-    padding-top: 4px;
-}
+  margin-left: 15px;
+  padding-top: 4px; }
 
 .sections {
-    margin-left: 15px;
-    padding: 4px;
-}
-
-div.section {
-}
+  margin-left: 15px;
+  padding: 4px; }
 
 td {
-    padding: 0px;
-}
+  padding: 0px; }
 
 #scheduler {
-    width: 100%
-}
-
-#scheduler tr {
-    vertical-align: top;
-}
+  width: 100%; }
+  #scheduler tr {
+    vertical-align: top; }
 
 #calendar {
-    background-color: #DDF1FF;
-    padding: 8px;
-    border: 1px solid #CBCBCB;
-    /* TODO: Magic numbers for widths */
-    min-width: 500px;
-    max-width: 813;
-    margin: auto;
-}
-
-#calendar table {
-    border-collapse: collapse;
-}
-
-#calendar .day {
-    width: 150px;
-}
+  background-color: #ddf1ff;
+  padding: 8px;
+  border: 1px solid #cbcbcb;
+  /* TODO: Magic numbers for widths */
+  min-width: 500px;
+  max-width: 813;
+  margin: auto; }
+  #calendar table {
+    border-collapse: collapse; }
+  #calendar .day {
+    width: 150px; }
 
 th.day {
-    padding-bottom: 8px;
-}
+  padding-bottom: 8px; }
 
 td.day {
-    background-color: #fffbf2;
-}
+  background-color: #fffbf2; }
 
 #calendar .scrollbar {
-    width: 9px;
-}
-
+  width: 9px; }
 #calendar td {
-    border-right: 1px solid #CBCBCB;
-}
+  border-right: 1px solid #cbcbcb; }
 
 .scroller {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    height: 500px; /* TODO: Control with Javascript */
-    border: 1px solid #CBCBCB;
-}
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 500px;
+  /* TODO: Control with Javascript */
+  border: 1px solid #cbcbcb; }
 
 .times {
-    width: 40px;
-    min-width: 40px;
-    text-align: right;
-}
+  width: 40px;
+  min-width: 40px;
+  text-align: right; }
 
 .days .times {
-    background-color: #EFEFEF;
-}
+  background-color: #efefef; }
 
 .time {
-    position: absolute;
-    font-size: 10pt;
-    border-top: 1px solid #CCC;
-    width: 100%
-}
+  position: absolute;
+  font-size: 10pt;
+  border-top: 1px solid #cccccc;
+  width: 100%; }
 
 .forceHeight {
-    visibility: hidden;
-    width: 0px;
-    height: 1344px; /* See the timeHeight function */
-}
+  visibility: hidden;
+  width: 0px;
+  height: 1344px;
+  /* See the timeHeight function */ }
 
 td .container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
+  position: relative;
+  width: 100%;
+  height: 100%; }
 
 .hour {
-    position: absolute;
-    height: 0px;
-    width: 100%;
-    border-top: 1px solid #CCC;
-}
+  position: absolute;
+  height: 0px;
+  width: 100%;
+  border-top: 1px solid #cccccc; }
 
 .halfHour {
-    position: absolute;
-    height: 0px;
-    width: 100%;
-    border-top: 1px dashed #CCC;
-}
+  position: absolute;
+  height: 0px;
+  width: 100%;
+  border-top: 1px dashed #cccccc; }
 
 .businessHours {
-    position: absolute;
-    width: 100%;
-    top: 504px; /* See the timeHeight function */
-    height: 448px; /* See the timeHeight function */
-    background-color: white;
-}
+  position: absolute;
+  width: 100%;
+  top: 504px;
+  /* See the timeHeight function */
+  height: 448px;
+  /* See the timeHeight function */
+  background-color: white; }
 
 .event {
-    position: absolute;
-    overflow: hidden;
-    width: 100%;
-}
+  position: absolute;
+  overflow: hidden;
+  width: 100%; }
 
 .diagonal {
-    position: absolute;
-    height: 128px;
-    width: 128px;
-}
+  position: absolute;
+  height: 128px;
+  width: 128px; }
 
 .event .content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-}
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 100; }
 
-.color0 { background-color: #bfeaff; }
-.color0.active, .color0 .active { background-color: #80d4ff; }
-.color0.targeted, .color0 .targeted { background-color: #40bfff; }
-.diagonal.c0 { background-image: url("images/diagonal0.gif"); }
-.color1 { background-color: #ffefbf; }
-.color1.active, .color1 .active { background-color: #ffdf80; }
-.color1.targeted, .color1 .targeted { background-color: #ffcf40; }
-.diagonal.c1 { background-image: url("images/diagonal1.gif"); }
-.color2 { background-color: #ffbfbf; }
-.color2.active, .color2 .active { background-color: #ff8080; }
-.color2.targeted, .color2 .targeted { background-color: #ff4040; }
-.diagonal.c2 { background-image: url("images/diagonal2.gif"); }
-.color3 { background-color: #e4ffbf; }
-.color3.active, .color3 .active { background-color: #caff80; }
-.color3.targeted, .color3 .targeted { background-color: #afff40; }
-.diagonal.c3 { background-image: url("images/diagonal3.gif"); }
-.color4 { background-color: #cabfff; }
-.color4.active, .color4 .active { background-color: #9580ff; }
-.color4.targeted, .color4 .targeted { background-color: #6040ff; }
-.diagonal.c4 { background-image: url("images/diagonal4.gif"); }
-.color5 { background-color: #ffbfff; }
-.color5.active, .color5 .active { background-color: #ff80ff; }
-.color5.targeted, .color5 .targeted { background-color: #ff40ff; }
-.diagonal.c5 { background-image: url("images/diagonal5.gif"); }
-.color6 { background-color: #bfffdf; }
-.color6.active, .color6 .active { background-color: #80ffbf; }
-.color6.targeted, .color6 .targeted { background-color: #40ff9f; }
-.diagonal.c6 { background-image: url("images/diagonal6.gif"); }
-.color7 { background-color: #ffd5bf; }
-.color7.active, .color7 .active { background-color: #ffaa80; }
-.color7.targeted, .color7 .targeted { background-color: #ff8040; }
-.diagonal.c7 { background-image: url("images/diagonal7.gif"); }
+.color0 {
+  background-color: #bfeaff; }
+  .color0.active, .color0 .active {
+    background-color: #80d4ff; }
+  .color0.targeted, .color0 .targeted {
+    background-color: #40bfff; }
+
+.diagonal.c0 {
+  background-image: url("images/diagonal0.gif"); }
+
+.color1 {
+  background-color: #ffefbf; }
+  .color1.active, .color1 .active {
+    background-color: #ffdf80; }
+  .color1.targeted, .color1 .targeted {
+    background-color: #ffcf40; }
+
+.diagonal.c1 {
+  background-image: url("images/diagonal1.gif"); }
+
+.color2 {
+  background-color: #ffbfbf; }
+  .color2.active, .color2 .active {
+    background-color: #ff8080; }
+  .color2.targeted, .color2 .targeted {
+    background-color: #ff4040; }
+
+.diagonal.c2 {
+  background-image: url("images/diagonal2.gif"); }
+
+.color3 {
+  background-color: #e4ffbf; }
+  .color3.active, .color3 .active {
+    background-color: #caff80; }
+  .color3.targeted, .color3 .targeted {
+    background-color: #afff40; }
+
+.diagonal.c3 {
+  background-image: url("images/diagonal3.gif"); }
+
+.color4 {
+  background-color: #cabfff; }
+  .color4.active, .color4 .active {
+    background-color: #9580ff; }
+  .color4.targeted, .color4 .targeted {
+    background-color: #6040ff; }
+
+.diagonal.c4 {
+  background-image: url("images/diagonal4.gif"); }
+
+.color5 {
+  background-color: #ffbfff; }
+  .color5.active, .color5 .active {
+    background-color: #ff80ff; }
+  .color5.targeted, .color5 .targeted {
+    background-color: #ff40ff; }
+
+.diagonal.c5 {
+  background-image: url("images/diagonal5.gif"); }
+
+.color6 {
+  background-color: #bfffdf; }
+  .color6.active, .color6 .active {
+    background-color: #80ffbf; }
+  .color6.targeted, .color6 .targeted {
+    background-color: #40ff9f; }
+
+.diagonal.c6 {
+  background-image: url("images/diagonal6.gif"); }
+
+.color7 {
+  background-color: #ffd5bf; }
+  .color7.active, .color7 .active {
+    background-color: #ffaa80; }
+  .color7.targeted, .color7 .targeted {
+    background-color: #ff8040; }
+
+.diagonal.c7 {
+  background-image: url("images/diagonal7.gif"); }
