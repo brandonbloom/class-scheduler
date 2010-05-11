@@ -290,9 +290,12 @@ $(function() {
     var createEvent = function(day, start, end, sections) {
         var newEvent = eventTemplate.clone();
         var duration = end - start;
-        newEvent.css('margin-top', timeHeight(start) + 1 + 'px')
-                .css('height', timeHeight(duration) - 1 + 'px');
+        var top = timeHeight(start);
+        var height = timeHeight(duration);
         $('td.day.' + day + ' .container').append(newEvent);
+        $('.content', newEvent)
+            .css('margin-top', top + 1 + 'px')
+            .css('height', height - 1 + 'px');
         if (sections.length > 1) {
             //TODO: Handle course self-conflicts.
             // Maybe show white stripes?
@@ -300,14 +303,20 @@ $(function() {
             var STRIPE_HEIGHT = 128;
             var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
             var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
-            var rows = Math.ceil(newEvent.height() / 112);
+            var rows = Math.ceil(height / 112);
             var cols = Math.ceil(newEvent.width() / 16);
             var stripeContainers = [];
             for (var sectionIndex in sections) {
-                var color = courses[sections[sectionIndex].courseId].color;
+                var section = sections[sectionIndex];
+                var color = courses[section.courseId].color;
                 var stripeContainer = $('<div/>', {
                     'class' : 'stripes ' + color
                 });
+                var adjustTop = 1;//(section.start == start ? 1 : 0);
+                var adjustHeight = 0;//(section.end == end ? 1 : 0);
+                stripeContainer
+                    .css('margin-top', -height + adjustTop + 'px')
+                    .css('height', height + adjustTop + adjustHeight + 'px');
                 stripeContainers.push(stripeContainer);
                 newEvent.append(stripeContainer);
             }
@@ -315,12 +324,13 @@ $(function() {
                 var i = y * (MIN_X - 1);
                 for (var x = MIN_X; x < cols; ++x) {
                     var sectionIndex = mod(i, sections.length)
+                    var section = sections[sectionIndex];
                     stripeContainers[sectionIndex].append($('<div/>', {
                         css: {
                             left: (x * STRIPE_RADIUS -
                                    STRIPE_RADIUS / 4) + 'px',
                             top: (y * STRIPE_INNER_HEIGHT -
-                                  STRIPE_RADIUS / 2) + 'px'
+                                  STRIPE_RADIUS / 2) - height + 'px'
                         }
                     }));
                     ++i;
@@ -376,6 +386,9 @@ $(function() {
                 for (var edgeIndex in edges.started) {
                     var edge = edges.started[edgeIndex];
                     openSections.push(edge.section);
+                    if (startTime == null) {
+                        startTime = time;
+                    }
                 }
             }
         }

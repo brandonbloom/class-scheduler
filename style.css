@@ -51,7 +51,6 @@ td {
   background-color: #ddf1ff;
   padding: 8px;
   border: 1px solid #cbcbcb;
-  /* TODO: Magic numbers for widths */
   min-width: 500px;
   max-width: 813;
   margin: auto; }
@@ -75,7 +74,6 @@ td.day {
   overflow-x: hidden;
   overflow-y: scroll;
   height: 500px;
-  /* TODO: Control with Javascript */
   border: 1px solid #cbcbcb; }
 
 .times {
@@ -126,16 +124,21 @@ td .container {
   overflow: hidden;
   width: 100%; }
 
+.event .content {
+  position: relative;
+  width: 100%;
+  z-index: 100; }
+
+.stripes {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 0px; }
+
 .stripes div {
   position: absolute;
   height: 128px;
   width: 128px; }
-
-.event .content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  z-index: 100; }
 
 .solid.color0 {
   background-color: #bfeaff; }
