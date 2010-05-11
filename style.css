@@ -151,7 +151,6 @@ td .container {
 
 .occurance.active, .occurance.selected {
     display: block;
-    visibility: visible;
 }
 
 .event {

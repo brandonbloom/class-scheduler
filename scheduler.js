@@ -199,6 +199,11 @@ function values(obj) {
     return values;
 }
 
+// Supports negative numbers
+function mod(x, y) {
+    return ((x % y) + y) % y;
+};
+
 //TODO: Support weekends
 var DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
@@ -267,13 +272,97 @@ $(function() {
         });
     }
 
+    var fillStripes = function(element, colors) {
+        var STRIPE_RADIUS = 16;
+        var STRIPE_HEIGHT = 128;
+        var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
+        var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
+        var rows = Math.ceil(element.height() / 112);
+        var cols = Math.ceil(element.width() / 16);
+        for (var y = 0; y < rows; ++y) {
+            var i = y * (MIN_X - 1);
+            for (var x = MIN_X; x < cols; ++x) {
+                element.append($('<div/>', {
+                    class: 'diagonal c' + colors[mod(i, colors.length)],
+                    css: {
+                        left: x * STRIPE_RADIUS - STRIPE_RADIUS / 4 + 'px',
+                        top: y * STRIPE_INNER_HEIGHT - STRIPE_RADIUS / 2 + 'px'
+                    }
+                }));
+                ++i;
+            }
+        }
+    };
+
+    var createEvent = function(day, start, end, sections) {
+        var colors = $.map(sections, function(section) {
+            //TODO: LOOK UP COURSE COLOR
+            return section.courseId - 1;
+        });
+        var newEvent = eventTemplate.clone();
+        sizeEvent(newEvent, start, end);
+        $('td.day.' + day + ' .container').append(newEvent);
+        if (sections.length > 1) {
+            fillStripes(newEvent, colors);
+        } else {
+            newEvent.addClass('color' + colors[0]);
+        }
+        var text = $.map(sections, function(section) {
+            return section.id;
+        }).join(', ');
+        $('.content', newEvent).text(text);
+    };
+
+    var rebuildEvents = function() {
+        $('.event', calendar).remove();
+        for (var dayIndex in DAYS) {
+            var day = DAYS[dayIndex];
+            // Maps halfHourIndex to sections with that start or end time.
+            //TODO: Is it OK to only support half-hour accuracy?
+            var edgesByHalfHour = [];
+            for (var hour = 0; hour <= 48; ++hour) {
+                edgesByHalfHour.push({started:[], ended:[]});
+            }
+            $('.' + day + ' .occurance:visible', calendar).eachData('section',
+                function(section) {
+                    // Grow times to nearest containing half-hours.
+                    edgesByHalfHour[Math.floor(section.start * 2)]
+                        .started.push({section:section, time:section.start});
+                    edgesByHalfHour[Math.ceil(section.end * 2)]
+                        .ended.push({section:section, time:section.end});
+                });
+            var openSections = [];
+            var startTime = null;
+            for (var halfHourIndex in edgesByHalfHour) {
+                var time = halfHourIndex / 2.0;
+                var edges = edgesByHalfHour[halfHourIndex];
+                if (edges.started.length > 0 || edges.ended.length > 0) {
+                    if (startTime !== null) {
+                        createEvent(day, startTime, time, openSections);
+                    }
+                    startTime = time;
+                }
+                for (var edgeIndex in edges.ended) {
+                    var edge = edges.ended[edgeIndex];
+                    openSections.splice(openSections.indexOf(edge.section), 1);
+                }
+                for (var edgeIndex in edges.started) {
+                    var edge = edges.started[edgeIndex];
+                    openSections.push(edge.section);
+                }
+            }
+        }
+    };
+
     $.fn.bindHighlighting = function(settings) {
         var elements = $(settings.selector, this);
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
                 elements.dataEQ(settings.key, value).addClass(settings.cls);
+                rebuildEvents();
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
+                rebuildEvents();
             });
         });
         return this;
@@ -422,96 +511,4 @@ $(function() {
     });
 
     $('.scroller', calendar).scrollTop(timeHeight(7.75));
-
-    var mod = function(x, y) {
-        // Supports negative numbers
-        return ((x % y) + y) % y;
-    };
-
-    var fillStripes = function(element, colors) {
-        var STRIPE_RADIUS = 16;
-        var STRIPE_HEIGHT = 128;
-        var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
-        var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
-        var rows = Math.ceil(element.height() / 112);
-        var cols = Math.ceil(element.width() / 16);
-        for (var y = 0; y < rows; ++y) {
-            var i = y * (MIN_X - 1);
-            for (var x = MIN_X; x < cols; ++x) {
-                element.append($('<div/>', {
-                    class: 'diagonal c' + colors[mod(i, colors.length)],
-                    css: {
-                        left: x * STRIPE_RADIUS - STRIPE_RADIUS / 4 + 'px',
-                        top: y * STRIPE_INNER_HEIGHT - STRIPE_RADIUS / 2 + 'px'
-                    }
-                }));
-                ++i;
-            }
-        }
-    };
-
-    var createEvent = function(day, start, end, sections) {
-        var colors = $.map(sections, function(section) {
-            //TODO: LOOK UP COURSE COLOR
-            return section.courseId - 1;
-        });
-        var newEvent = eventTemplate.clone();
-        sizeEvent(newEvent, start, end);
-        $('td.day.' + day + ' .container').append(newEvent);
-        if (sections.length > 1) {
-            fillStripes(newEvent, colors);
-        } else {
-            newEvent.addClass('color' + colors[0]);
-        }
-        var text = $.map(sections, function(section) {
-            return section.id;
-        }).join(', ');
-        $('.content', newEvent).text(text);
-    };
-
-    var rebuildEvents = function() {
-        $('.event', calendar).remove();
-        for (var dayIndex in DAYS) {
-            var day = DAYS[dayIndex];
-            console.log('--' + day + '--');
-            // Maps halfHourIndex to sections with that start or end time.
-            //TODO: Is it OK to only support half-hour accuracy?
-            var edgesByHalfHour = [];
-            for (var hour = 0; hour <= 48; ++hour) {
-                edgesByHalfHour.push({started:[], ended:[]});
-            }
-            $('.' + day + ' .occurance:visible', calendar).eachData('section',
-                function(section) {
-                    // Grow times to nearest containing half-hours.
-                    edgesByHalfHour[Math.floor(section.start * 2)]
-                        .started.push({section:section, time:section.start});
-                    edgesByHalfHour[Math.ceil(section.end * 2)]
-                        .ended.push({section:section, time:section.end});
-                });
-            var openSections = [];
-            var startTime = null;
-            for (var halfHourIndex in edgesByHalfHour) {
-                var time = halfHourIndex / 2.0;
-                var edges = edgesByHalfHour[halfHourIndex];
-                if (edges.started.length > 0 || edges.ended.length > 0) {
-                    if (startTime !== null) {
-                        createEvent(day, startTime, time, openSections);
-                    }
-                    startTime = time;
-                }
-                for (var edgeIndex in edges.ended) {
-                    var edge = edges.ended[edgeIndex];
-                    console.log('  end: ' + edge.section.id);
-                    openSections.splice(openSections.indexOf(edge.section), 1);
-                }
-                for (var edgeIndex in edges.started) {
-                    var edge = edges.started[edgeIndex];
-                    console.log('  start: ' + edge.section.id);
-                    openSections.push(edge.section);
-                }
-            }
-        }
-    };
-
-    $('#voodoo').click(rebuildEvents);
 });
