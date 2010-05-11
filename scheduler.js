@@ -442,11 +442,11 @@ $(function() {
         // Course Events
         $('.remove', newCourse).click(function() {
             var course = $(this).parents('.course').data('course');
+            selectCourse(course, false);
             delete courses[course.id];
             $(this).closest('.course').slideUp(300, function() {
                 $(this).remove();
             });
-            scheduler.trigger('selectionChanged');
         });
         courseList.append(newCourse);
     };
