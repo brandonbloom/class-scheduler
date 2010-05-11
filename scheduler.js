@@ -247,11 +247,6 @@ $(function() {
         element.css('margin-top',
                     timeHeight(time) + 'px');
     }
-    var sizeEvent = function(element, start, end) {
-        var duration = end - start;
-        element.css('margin-top', timeHeight(start) + 1 + 'px')
-               .css('height', timeHeight(duration) - 1 + 'px');
-    }
 
     for (var hour = 0; hour < 24; hour++) {
         // Hour markers
@@ -292,41 +287,48 @@ $(function() {
         });
     }
 
-    var fillStripes = function(element, colors) {
-        //TODO: Handle (colors.length == 0) Maybe show white stripes?
-        var STRIPE_RADIUS = 16;
-        var STRIPE_HEIGHT = 128;
-        var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
-        var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
-        var rows = Math.ceil(element.height() / 112);
-        var cols = Math.ceil(element.width() / 16);
-        for (var y = 0; y < rows; ++y) {
-            var i = y * (MIN_X - 1);
-            for (var x = MIN_X; x < cols; ++x) {
-                element.append($('<div/>', {
-                    class: 'diagonal c' + colors[mod(i, colors.length)],
-                    css: {
-                        left: x * STRIPE_RADIUS - STRIPE_RADIUS / 4 + 'px',
-                        top: y * STRIPE_INNER_HEIGHT - STRIPE_RADIUS / 2 + 'px'
-                    }
-                }));
-                ++i;
-            }
-        }
-    };
-
     var createEvent = function(day, start, end, sections) {
-        var colors = $.map(sections, function(section) {
-            //TODO: LOOK UP COURSE COLOR
-            return section.courseId - 1;
-        });
         var newEvent = eventTemplate.clone();
-        sizeEvent(newEvent, start, end);
+        var duration = end - start;
+        newEvent.css('margin-top', timeHeight(start) + 1 + 'px')
+                .css('height', timeHeight(duration) - 1 + 'px');
         $('td.day.' + day + ' .container').append(newEvent);
         if (sections.length > 1) {
-            fillStripes(newEvent, colors);
+            //TODO: Handle course self-conflicts.
+            // Maybe show white stripes?
+            var STRIPE_RADIUS = 16;
+            var STRIPE_HEIGHT = 128;
+            var STRIPE_INNER_HEIGHT = 128 - STRIPE_RADIUS;
+            var MIN_X = -(STRIPE_INNER_HEIGHT / STRIPE_RADIUS) - 1;
+            var rows = Math.ceil(newEvent.height() / 112);
+            var cols = Math.ceil(newEvent.width() / 16);
+            var stripeContainers = [];
+            for (var sectionIndex in sections) {
+                var color = courses[sections[sectionIndex].courseId].color;
+                var stripeContainer = $('<div/>', {
+                    'class' : 'stripes ' + color
+                });
+                stripeContainers.push(stripeContainer);
+                newEvent.append(stripeContainer);
+            }
+            for (var y = 0; y < rows; ++y) {
+                var i = y * (MIN_X - 1);
+                for (var x = MIN_X; x < cols; ++x) {
+                    var sectionIndex = mod(i, sections.length)
+                    stripeContainers[sectionIndex].append($('<div/>', {
+                        css: {
+                            left: (x * STRIPE_RADIUS -
+                                   STRIPE_RADIUS / 4) + 'px',
+                            top: (y * STRIPE_INNER_HEIGHT -
+                                  STRIPE_RADIUS / 2) + 'px'
+                        }
+                    }));
+                    ++i;
+                }
+            }
         } else {
-            newEvent.addClass('color' + colors[0]);
+            var color = courses[sections[0].courseId].color;
+            $('.content', newEvent).addClass(color);
         }
         var text = $.map(sections, function(section) {
             return section.id;
@@ -334,8 +336,7 @@ $(function() {
         $('.content', newEvent).text(text);
     };
 
-    var rebuildEvents = function() {
-        $('.event', calendar).remove();
+    var addEvents = function(sections) {
         for (var dayIndex in DAYS) {
             var day = DAYS[dayIndex];
             // Maps halfHourIndex to sections with that start or end time.
@@ -344,8 +345,8 @@ $(function() {
             for (var hour = 0; hour <= 48; ++hour) {
                 edgesByHalfHour.push({started:[], ended:[]});
             }
-            for (var sectionId in selectedSections) {
-                var section = selectedSections[sectionId];
+            for (var sectionId in sections) {
+                var section = sections[sectionId];
                 if (section.days.indexOf(day) != -1) {
                     // Grow times to nearest containing half-hours.
                     edgesByHalfHour[Math.floor(section.start * 2)]
@@ -368,6 +369,9 @@ $(function() {
                 for (var edgeIndex in edges.ended) {
                     var edge = edges.ended[edgeIndex];
                     openSections.splice(openSections.indexOf(edge.section), 1);
+                    if (openSections.length == 0) {
+                        startTime = null;
+                    }
                 }
                 for (var edgeIndex in edges.started) {
                     var edge = edges.started[edgeIndex];
@@ -378,7 +382,8 @@ $(function() {
     };
 
     scheduler.bind('selectionChanged', function() {
-        rebuildEvents();
+        $('.event', calendar).remove();
+        addEvents(selectedSections);
     });
 
     $.fn.bindHighlighting = function(settings) {
@@ -386,20 +391,22 @@ $(function() {
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
                 elements.dataEQ(settings.key, value).addClass(settings.cls);
-                scheduler.trigger('selectionChanged');
+                // BLAH TODO TODO addEvents(
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
-                scheduler.trigger('selectionChanged');
             });
         });
         return this;
     };
 
     var addCourse = function(course) {
+        // TODO: Next line should pull available color from a list.
+        course.color = 'color' + (course.id - 1);
         courses[course.id] = course;
         // Course
         var newCourse = courseTemplate.clone();
         newCourse.data('course', course);
+        newCourse.addClass(course.color);
         var sectionTypeCount = Object.size(course.sections);
         var checkboxId = 'course_' + course.id;
         newCourse.children('input').attr('id', checkboxId);
@@ -484,8 +491,6 @@ $(function() {
 
     $('.course', scheduler).eachData('course', function(course) {
         //TODO: NEXT LINE IS A HACK, WILL NEED TO SELECT AN UNUSED COLOR.
-        var courseColor = 'color' + (course.id - 1)
-        $(this).addClass(courseColor);
     });
 
     var selectSection = function(section, selected) {

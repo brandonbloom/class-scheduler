@@ -131,7 +131,7 @@ td .container
   overflow: hidden
   width: 100%
 
-.diagonal
+.stripes div
   position: absolute
   height: 128px
   width: 128px
@@ -142,82 +142,59 @@ td .container
   height: 100%
   z-index: 100
 
-.color0
+.solid.color0
   background-color: #bfeaff
-  &.active, .active
-    background-color: #80d4ff
-  &.targeted, .targeted
-    background-color: #40bfff
-
-.diagonal.c0
-  background-image: url("images/diagonal0.gif")
-
-.color1
+.solid.color0.a
+  background-color: #80d4ff
+.solid.color0.b
+  background-color: #40bfff
+.solid.color1
   background-color: #ffefbf
-  &.active, .active
-    background-color: #ffdf80
-  &.targeted, .targeted
-    background-color: #ffcf40
-
-.diagonal.c1
-  background-image: url("images/diagonal1.gif")
-
-.color2
+.solid.color1.a
+  background-color: #ffdf80
+.solid.color1.b
+  background-color: #ffcf40
+.solid.color2
   background-color: #ffbfbf
-  &.active, .active
-    background-color: #ff8080
-  &.targeted, .targeted
-    background-color: #ff4040
-
-.diagonal.c2
-  background-image: url("images/diagonal2.gif")
-
-.color3
+.solid.color2.a
+  background-color: #ff8080
+.solid.color2.b
+  background-color: #ff4040
+.solid.color3
   background-color: #e4ffbf
-  &.active, .active
-    background-color: #caff80
-  &.targeted, .targeted
-    background-color: #afff40
-
-.diagonal.c3
-  background-image: url("images/diagonal3.gif")
-
-.color4
+.solid.color3.a
+  background-color: #caff80
+.solid.color3.b
+  background-color: #afff40
+.solid.color4
   background-color: #cabfff
-  &.active, .active
-    background-color: #9580ff
-  &.targeted, .targeted
-    background-color: #6040ff
-
-.diagonal.c4
-  background-image: url("images/diagonal4.gif")
-
-.color5
+.solid.color4.a
+  background-color: #9580ff
+.solid.color4.b
+  background-color: #6040ff
+.solid.color5
   background-color: #ffbfff
-  &.active, .active
-    background-color: #ff80ff
-  &.targeted, .targeted
-    background-color: #ff40ff
-
-.diagonal.c5
-  background-image: url("images/diagonal5.gif")
-
-.color6
+.solid.color5.a
+  background-color: #ff80ff
+.solid.color5.b
+  background-color: #ff40ff
+.solid.color6
   background-color: #bfffdf
-  &.active, .active
-    background-color: #80ffbf
-  &.targeted, .targeted
-    background-color: #40ff9f
-
-.diagonal.c6
-  background-image: url("images/diagonal6.gif")
-
-.color7
+.solid.color6.a
+  background-color: #80ffbf
+.solid.color6.b
+  background-color: #40ff9f
+.solid.color7
   background-color: #ffd5bf
-  &.active, .active
-    background-color: #ffaa80
-  &.targeted, .targeted
-    background-color: #ff8040
+.solid.color7.a
+  background-color: #ffaa80
+.solid.color7.b
+  background-color: #ff8040
 
-.diagonal.c7
-  background-image: url("images/diagonal7.gif")
+@for $i from 0 through 7
+  .stripes.color#{$i} div
+    background-image: url("stripes/#{$i}.gif")
+  .stripes.color#{$i}.a div
+    background-image: url("stripes/#{$i}.a.gif")
+  .stripes.color#{$i}.b div
+    background-image: url("stripes/#{$i}.b.gif")

@@ -126,7 +126,7 @@ td .container {
   overflow: hidden;
   width: 100%; }
 
-.diagonal {
+.stripes div {
   position: absolute;
   height: 128px;
   width: 128px; }
@@ -137,82 +137,146 @@ td .container {
   height: 100%;
   z-index: 100; }
 
-.color0 {
+.solid.color0 {
   background-color: #bfeaff; }
-  .color0.active, .color0 .active {
-    background-color: #80d4ff; }
-  .color0.targeted, .color0 .targeted {
-    background-color: #40bfff; }
 
-.diagonal.c0 {
-  background-image: url("images/diagonal0.gif"); }
+.solid.color0.a {
+  background-color: #80d4ff; }
 
-.color1 {
+.solid.color0.b {
+  background-color: #40bfff; }
+
+.solid.color1 {
   background-color: #ffefbf; }
-  .color1.active, .color1 .active {
-    background-color: #ffdf80; }
-  .color1.targeted, .color1 .targeted {
-    background-color: #ffcf40; }
 
-.diagonal.c1 {
-  background-image: url("images/diagonal1.gif"); }
+.solid.color1.a {
+  background-color: #ffdf80; }
 
-.color2 {
+.solid.color1.b {
+  background-color: #ffcf40; }
+
+.solid.color2 {
   background-color: #ffbfbf; }
-  .color2.active, .color2 .active {
-    background-color: #ff8080; }
-  .color2.targeted, .color2 .targeted {
-    background-color: #ff4040; }
 
-.diagonal.c2 {
-  background-image: url("images/diagonal2.gif"); }
+.solid.color2.a {
+  background-color: #ff8080; }
 
-.color3 {
+.solid.color2.b {
+  background-color: #ff4040; }
+
+.solid.color3 {
   background-color: #e4ffbf; }
-  .color3.active, .color3 .active {
-    background-color: #caff80; }
-  .color3.targeted, .color3 .targeted {
-    background-color: #afff40; }
 
-.diagonal.c3 {
-  background-image: url("images/diagonal3.gif"); }
+.solid.color3.a {
+  background-color: #caff80; }
 
-.color4 {
+.solid.color3.b {
+  background-color: #afff40; }
+
+.solid.color4 {
   background-color: #cabfff; }
-  .color4.active, .color4 .active {
-    background-color: #9580ff; }
-  .color4.targeted, .color4 .targeted {
-    background-color: #6040ff; }
 
-.diagonal.c4 {
-  background-image: url("images/diagonal4.gif"); }
+.solid.color4.a {
+  background-color: #9580ff; }
 
-.color5 {
+.solid.color4.b {
+  background-color: #6040ff; }
+
+.solid.color5 {
   background-color: #ffbfff; }
-  .color5.active, .color5 .active {
-    background-color: #ff80ff; }
-  .color5.targeted, .color5 .targeted {
-    background-color: #ff40ff; }
 
-.diagonal.c5 {
-  background-image: url("images/diagonal5.gif"); }
+.solid.color5.a {
+  background-color: #ff80ff; }
 
-.color6 {
+.solid.color5.b {
+  background-color: #ff40ff; }
+
+.solid.color6 {
   background-color: #bfffdf; }
-  .color6.active, .color6 .active {
-    background-color: #80ffbf; }
-  .color6.targeted, .color6 .targeted {
-    background-color: #40ff9f; }
 
-.diagonal.c6 {
-  background-image: url("images/diagonal6.gif"); }
+.solid.color6.a {
+  background-color: #80ffbf; }
 
-.color7 {
+.solid.color6.b {
+  background-color: #40ff9f; }
+
+.solid.color7 {
   background-color: #ffd5bf; }
-  .color7.active, .color7 .active {
-    background-color: #ffaa80; }
-  .color7.targeted, .color7 .targeted {
-    background-color: #ff8040; }
 
-.diagonal.c7 {
-  background-image: url("images/diagonal7.gif"); }
+.solid.color7.a {
+  background-color: #ffaa80; }
+
+.solid.color7.b {
+  background-color: #ff8040; }
+
+.stripes.color0 div {
+  background-image: url("stripes/0.gif"); }
+
+.stripes.color0.a div {
+  background-image: url("stripes/0.a.gif"); }
+
+.stripes.color0.b div {
+  background-image: url("stripes/0.b.gif"); }
+
+.stripes.color1 div {
+  background-image: url("stripes/1.gif"); }
+
+.stripes.color1.a div {
+  background-image: url("stripes/1.a.gif"); }
+
+.stripes.color1.b div {
+  background-image: url("stripes/1.b.gif"); }
+
+.stripes.color2 div {
+  background-image: url("stripes/2.gif"); }
+
+.stripes.color2.a div {
+  background-image: url("stripes/2.a.gif"); }
+
+.stripes.color2.b div {
+  background-image: url("stripes/2.b.gif"); }
+
+.stripes.color3 div {
+  background-image: url("stripes/3.gif"); }
+
+.stripes.color3.a div {
+  background-image: url("stripes/3.a.gif"); }
+
+.stripes.color3.b div {
+  background-image: url("stripes/3.b.gif"); }
+
+.stripes.color4 div {
+  background-image: url("stripes/4.gif"); }
+
+.stripes.color4.a div {
+  background-image: url("stripes/4.a.gif"); }
+
+.stripes.color4.b div {
+  background-image: url("stripes/4.b.gif"); }
+
+.stripes.color5 div {
+  background-image: url("stripes/5.gif"); }
+
+.stripes.color5.a div {
+  background-image: url("stripes/5.a.gif"); }
+
+.stripes.color5.b div {
+  background-image: url("stripes/5.b.gif"); }
+
+.stripes.color6 div {
+  background-image: url("stripes/6.gif"); }
+
+.stripes.color6.a div {
+  background-image: url("stripes/6.a.gif"); }
+
+.stripes.color6.b div {
+  background-image: url("stripes/6.b.gif"); }
+
+.stripes.color7 div {
+  background-image: url("stripes/7.gif"); }
+
+.stripes.color7.a div {
+  background-image: url("stripes/7.a.gif"); }
+
+.stripes.color7.b div {
+  background-image: url("stripes/7.b.gif"); }
