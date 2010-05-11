@@ -425,12 +425,18 @@ $(function() {
                     newSectionType.append(newSectionList);
                 } else {
                     newSectionType.data('section', sections[0]);
+                    $('.name', newSectionType).text(function(index, text) {
+                        return text + ' ~ ' + sections[0].id;
+                    });
                 }
                 newCourse.append(newSectionType);
             } else if (sections.length > 1) {
                 newCourse.append(newSectionList);
             } else {
                 newCourse.data('section', sections[0]);
+                $('.name', newCourse).text(function(index, text) {
+                    return text + ' ~ ' + sections[0].id;
+                });
             }
             sectionTypeIndex++;
         }
