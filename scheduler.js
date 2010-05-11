@@ -386,10 +386,10 @@ $(function() {
         elements.eachData(settings.key, function(value) {
             $(this).mouseenter(function() {
                 elements.dataEQ(settings.key, value).addClass(settings.cls);
-                //scheduler.trigger('selectionChanged');
+                scheduler.trigger('selectionChanged');
             }).mouseleave(function() {
                 elements.removeClass(settings.cls);
-                //scheduler.trigger('selectionChanged');
+                scheduler.trigger('selectionChanged');
             });
         });
         return this;
@@ -434,10 +434,12 @@ $(function() {
             if (sectionTypeCount > 1) {
                 // Section Type
                 var newSectionType = sectionTypeTemplate.clone();
-                newSectionType.children('.name').text(sectionType);
                 if (sections.length > 1) {
+                    newSectionType.children('.name').text(sectionType);
                     newSectionType.append(newSectionList);
                 } else {
+                    newSectionType.children('.name')
+                        .text(sectionType + ' (' + sections[0].number + ')');
                     newSectionType.data('section', sections[0]);
                     $('.name', newSectionType).text(function(index, text) {
                         return text + ' ~ ' + sections[0].id;
