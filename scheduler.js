@@ -326,8 +326,8 @@ $(function() {
                     'class' : 'stripes ' + color
                 });
                 addData(stripeContainer, section);
-                var adjustTop = (section.start == start ? 1 : 0);
-                var adjustHeight = (section.end == end ? 0 : 1);
+                var adjustTop = (section.start === start ? 1 : 0);
+                var adjustHeight = (section.end === end ? 0 : 1);
                 positionElement(stripeContainer, adjustTop,
                                 height + adjustHeight - adjustTop);
                 stripeContainers.push(stripeContainer);
@@ -338,7 +338,7 @@ $(function() {
                 for (var x = MIN_X; x < cols; ++x) {
                     var sectionIndex = mod(i, sections.length)
                     var section = sections[sectionIndex];
-                    var adjust = (section.start == start ? 1 : 0);
+                    var adjust = (section.start === start ? 1 : 0);
                     stripeContainers[sectionIndex].append($('<div/>', {
                         css: {
                             left: (x * STRIPE_RADIUS -
@@ -375,7 +375,7 @@ $(function() {
             }
             for (var sectionId in sections) {
                 var section = sections[sectionId];
-                if (section.days.indexOf(day) != -1) {
+                if ($.inArray(day, section.days) !== -1) {
                     // Grow times to nearest containing half-hours.
                     edgesByHalfHour[Math.floor(section.start * 2)]
                         .started.push({section:section, time:section.start});
@@ -396,15 +396,16 @@ $(function() {
                 }
                 for (var edgeIndex in edges.ended) {
                     var edge = edges.ended[edgeIndex];
-                    openSections.splice(openSections.indexOf(edge.section), 1);
-                    if (openSections.length == 0) {
+                    var sectionIndex = $.inArray(edge.section, openSections);
+                    openSections.splice(sectionIndex, 1);
+                    if (openSections.length === 0) {
                         startTime = null;
                     }
                 }
                 for (var edgeIndex in edges.started) {
                     var edge = edges.started[edgeIndex];
                     openSections.push(edge.section);
-                    if (startTime == null) {
+                    if (startTime === null) {
                         startTime = time;
                     }
                 }
@@ -526,7 +527,7 @@ $(function() {
                 // Automatically add singular sections of a section type.
                 for (var sectionType in course.sections) {
                     var sections = course.sections[sectionType];
-                    if (sections.length == 1) {
+                    if (sections.length === 1) {
                         selectSection(sections[0], true);
                     }
                 }
@@ -554,7 +555,7 @@ $(function() {
             var sections = course.sections[sectionType];
             for (var sectionIndex in sections) {
                 var section = sections[sectionIndex];
-                if (allSections.indexOf(section) == -1) {
+                if (allSections.indexOf(section) === -1) {
                     allSections.push(section);
                 }
             }
