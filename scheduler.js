@@ -338,6 +338,21 @@ $(function() {
         showEvents(selectedSections);
     });
 
+    $.fn.bindSectionHighlight = function() {
+        $('*', this).eachData('section', function(section) {
+            var color = courses[section.courseId].color;
+            $(this).mouseenter(function() {
+                $(this).addClass('solid ' + color + ' b');
+                $('*', calendar).dataEQ('section', section).addClass('b');
+            }).mouseleave(function() {
+                $(this).removeClass('b')
+                .filter(':not(.course)').removeClass('solid ' + color);
+                $('*', calendar).dataEQ('section', section).removeClass('b');
+            });
+        });
+        return this;
+    };
+
     var addCourse = function(course) {
         // TODO: Next line should pull available colors from a list.
         course.color = 'color' + (course.id - 1);
@@ -411,6 +426,7 @@ $(function() {
                 $(this).remove();
             });
         });
+        newCourse.bindSectionHighlight();
         courseList.append(newCourse);
     };
 
@@ -486,18 +502,6 @@ $(function() {
         hoveredCourseId = null;
         $(this).removeClass('a');
         scheduler.trigger('selectionChanged');
-    });
-
-    $('div', courseList).eachData('section', function(section) {
-        var color = courses[section.courseId].color;
-        $(this).mouseenter(function() {
-            $(this).addClass('solid ' + color + ' b');
-            $('*', calendar).dataEQ('section', section).addClass('b');
-        }).mouseleave(function() {
-            $(this).removeClass('b')
-            .filter(':not(.course)').removeClass('solid ' + color);
-            $('*', calendar).dataEQ('section', section).removeClass('b');
-        });
     });
 
     $('.course .checkbox', courseList).change(function() {
