@@ -34,6 +34,7 @@ function mod(x, y) {
 };
 
 $.fn.checkboxify = function() {
+    //TODO: This seems to have some problems with keyboard access.
     return this.each(function() {
         $(this).data('checked', $(this).is(':checked'));
         $(this).click(function(){
@@ -67,6 +68,7 @@ $(function() {
     var sectionTemplate = $('.section', templates);
     var eventTemplate = $('.event', templates);
 
+    var measurer = $('#measurer');
     var scheduler = $('#scheduler');
     var courseList = $('#courseList', scheduler);
     var calendar = $('#calendar');
@@ -129,7 +131,8 @@ $(function() {
                    .css('height', height + 'px');
         }
         positionElement(newEvent, top, height + 1);
-        positionElement($('.content', newEvent), 1, height - 1);
+        var content = $('.content', newEvent);
+        positionElement(content, 1, height - 1);
         var addData = function(element, section) {
             element.data('course', courses[section.courseId])
                    .data('section', section);
@@ -179,17 +182,106 @@ $(function() {
                     ++i;
                 }
             }
+            fillConflictContent(content, sections);
         } else {
             var section = sections[0];
-            var content = $('.content', newEvent);
             var color = courses[section.courseId].color;
             content.addClass(color);
             addData(content, section);
+            fillSectionContent(content, section);
         }
-        var text = $.map(sections, function(section) {
-            return section.id;
-        }).join(', ');
-        $('.content', newEvent).text(text);
+    };
+
+    var shrinkHeightToFit = function(element, iterations) {
+        measurer.width(element.width());
+        var height = element.height();
+        for (var i in iterations) {
+            var iteration = iterations[i];
+            measurer.append(iteration());
+            if (measurer.height() <= height) {
+                break;
+            }
+            measurer.contents().remove();
+        }
+        element.append(measurer.contents().detach());
+    };
+
+    //TODO: THESE FILL FUNCTIONS ARE GIANT INJECTION HOLES!!!
+
+    var fillConflictContent = function(element, sections) {
+        var courseSections = {};
+        for (var sectionIndex in sections) {
+            var section = sections[sectionIndex];
+            var courseId = section.courseId;
+            if (!courseSections.hasOwnProperty(courseId)) {
+                courseSections[courseId] = [];
+            }
+            courseSections[courseId].push(section);
+        }
+        console.log(courseSections);
+        shrinkHeightToFit(element, [
+            //TODO: Group by subject where possible?
+            function() {
+                var s = '';
+                for (var courseId in courseSections) {
+                    var course = courses[courseId];
+                    var sections = courseSections[courseId];
+                    s += (course.subject.abbreviation + ' ' +
+                          course.number + ': ');
+                    s += $.map(sections, function(section) {
+                        return section.number;
+                    }).join(', ');
+                    s += '<br/>';
+                };
+                return s;
+            },
+            function() {
+                return sections.length + ' conflicting';
+            }
+        ]);
+    };
+
+    var fillSectionContent = function(element, section) {
+        var course = courses[section.courseId];
+        shrinkHeightToFit(element, [
+            function() {
+                return (course.name + '<br/>' +
+                        section.type + ' ' +
+                        section.number + '<br/>' +
+                        section.instructor.name);
+            },
+            function() {
+                return (course.subject.name + ' ' +
+                        course.number  + '<br/>' +
+                        section.type + ' ' +
+                        section.number + '<br/>' +
+                        section.instructor.name);
+            },
+            function() {
+                return (course.subject.abbreviation + ' ' +
+                        course.number  + '<br>' +
+                        section.type + ' ' +
+                        section.number + '<br/>' +
+                        section.instructor.name);
+            },
+            function() {
+                return (course.subject.abbreviation + ' ' +
+                        course.number  + '-' +
+                        section.number + '<br/>' +
+                        section.instructor.name);
+            },
+            function() {
+                return (course.subject.abbreviation + ' ' +
+                        course.number  + '<br>' +
+                        section.type + ' ' +
+                        section.number);
+            },
+            function() {
+                return (course.subject.abbreviation + ' ' +
+                        course.number  + '-' +
+                        section.number);
+            }
+        ]);
     };
 
     var showEvents = function(sections) {
@@ -247,7 +339,7 @@ $(function() {
     });
 
     var addCourse = function(course) {
-        // TODO: Next line should pull available color from a list.
+        // TODO: Next line should pull available colors from a list.
         course.color = 'color' + (course.id - 1);
         courses[course.id] = course;
         // Course
