@@ -532,7 +532,7 @@ $(function() {
 
     var resizeContent = function() {
         //TODO: This is a bit of a hack with magic numbers.
-        $('#courseList').height($(window).height() - 50);
+        $('#courseList').height($(window).height() - 68);
         $('#calendar .scroller').height($(window).height() - 68);
     };
 
