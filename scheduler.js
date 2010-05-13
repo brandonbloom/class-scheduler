@@ -197,7 +197,9 @@ $(function() {
         var height = element.height();
         for (var i in iterations) {
             var iteration = iterations[i];
-            measurer.append(iteration());
+            $('<div class="eventContent"/>')
+                .append(iteration())
+                .appendTo(measurer);
             if (measurer.height() <= height) {
                 break;
             }
@@ -233,10 +235,10 @@ $(function() {
                     }).join(', ');
                     s += '<br/>';
                 };
-                return s;
+                return '<b>' + s + '</b>';
             },
             function() {
-                return sections.length + ' conflicting';
+                return '<b>' + sections.length + ' conflicting</b>';
             }
         ]);
     };
@@ -245,40 +247,52 @@ $(function() {
         var course = courses[section.courseId];
         shrinkHeightToFit(element, [
             function() {
-                return (course.name + '<br/>' +
+                return ('<b>' +
+                        course.name + '<br/>' +
+                        '</b>' +
                         section.type + ' ' +
                         section.number + '<br/>' +
-                        section.instructor.name);
+                        '<i>' + section.instructor.name + '</i>');
             },
             function() {
-                return (course.subject.name + ' ' +
+                return ('<b>' +
+                        course.subject.name + ' ' +
                         course.number  + '<br/>' +
+                        '</b>' +
                         section.type + ' ' +
                         section.number + '<br/>' +
-                        section.instructor.name);
+                        '<i>' + section.instructor.name + '</i>');
             },
             function() {
-                return (course.subject.abbreviation + ' ' +
+                return ('<b>' +
+                        course.subject.abbreviation + ' ' +
                         course.number  + '<br>' +
+                        '</b>' +
                         section.type + ' ' +
                         section.number + '<br/>' +
-                        section.instructor.name);
+                        '<i>' + section.instructor.name + '</i>');
             },
             function() {
-                return (course.subject.abbreviation + ' ' +
+                return ('<b>' +
+                        course.subject.abbreviation + ' ' +
                         course.number  + '-' +
+                        '</b>' +
                         section.number + '<br/>' +
-                        section.instructor.name);
+                        '<i>' + section.instructor.name + '</i>');
             },
             function() {
-                return (course.subject.abbreviation + ' ' +
+                return ('<b>' +
+                        course.subject.abbreviation + ' ' +
                         course.number  + '<br>' +
+                        '</b>' +
                         section.type + ' ' +
                         section.number);
             },
             function() {
-                return (course.subject.abbreviation + ' ' +
+                return ('<b>' +
+                        course.subject.abbreviation + ' ' +
                         course.number  + '-' +
+                        '</b>' +
                         section.number);
             }
         ]);
