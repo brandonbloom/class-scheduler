@@ -146,7 +146,7 @@ var testData = [
             'name' : 'Computer Science'
         },
         'number' : '151',
-        'name' : 'Comptuer Programming I',
+        'name' : 'Computer Programming I',
         'sections' : {
             'Lecture' : [
                 {
@@ -192,7 +192,7 @@ var testData = [
             'name' : 'Computer Science'
         },
         'number' : '152',
-        'name' : 'Comptuer Programming 2',
+        'name' : 'Computer Programming 2',
         'sections' : {
             'Lecture' : [
                 {
