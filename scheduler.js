@@ -402,7 +402,7 @@ $(function() {
                     .attr('name', sectionTypeName)
                     .attr('id', radioId);
                 newSection.children('label')
-                    .text(section.number + ' ~ ' + section.id)
+                    .text(section.number)
                     .attr('for', radioId);
                 newSectionList.append(newSection)
             }
@@ -416,18 +416,12 @@ $(function() {
                     newSectionType.children('.name')
                         .text(sectionType + ' (' + sections[0].number + ')');
                     newSectionType.data('section', sections[0]);
-                    $('.name', newSectionType).text(function(index, text) {
-                        return text + ' ~ ' + sections[0].id;
-                    });
                 }
                 newCourse.append(newSectionType);
             } else if (sections.length > 1) {
                 newCourse.append(newSectionList);
             } else {
                 newCourse.data('section', sections[0]);
-                $('.name', newCourse).text(function(index, text) {
-                    return text + ' ~ ' + sections[0].id;
-                });
             }
             sectionTypeIndex++;
         }
